@@ -41,30 +41,107 @@ const LocationTimeBadge = () => {
   );
 };
 
+// === TEXT REVEAL WITH LETTER SPLIT ===
+const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRevealed = true }) => {
+  const letters = text.split('');
+  const floatAnimations = ['hero-float', 'hero-float-alt', 'hero-float-wide'];
+
+  return (
+    <span className={`inline-flex flex-wrap justify-center ${className}`}>
+      {letters.map((letter, i) => (
+        <Gsap.span
+          key={i}
+          initial={false}
+          animate={isRevealed
+            ? { opacity: 1, y: 0, rotateX: 0 }
+            : { opacity: 0, y: 60, rotateX: -60 }
+          }
+          transition={{
+            duration: 0.7,
+            delay: baseDelay + i * stagger,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="inline-block hover:scale-110 hover:text-lime-500 transition-all duration-200 cursor-default"
+          style={{ perspective: '600px', willChange: 'transform' }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget;
+            el.style.animation = `letter-bounce 0.4s ease-in-out`;
+            setTimeout(() => { el.style.animation = ''; }, 400);
+          }}
+        >
+          {letter === ' ' ? '\u00A0' : letter}
+        </Gsap.span>
+      ))}
+    </span>
+  );
+};
+
+// === MOUSE PARALLAX CONTAINER ===
+const ParallaxTilt = ({ children, className = '', intensity = 0.04 }) => {
+  const ref = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: x * intensity, y: y * intensity });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+    setIsHovering(false);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovering(true)}
+      className={className}
+      style={{
+        transform: `perspective(1200px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg)`,
+        transition: isHovering ? 'transform 0.08s ease-out' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'transform',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 // === DECORATIVE ORBITING ELEMENTS (Left & Right) ===
-const OrbitingDecoration = ({ icon: Icon, delay, className, isRevealed, enableAmbientMotion }) => (
-  <Gsap.div
-    initial={false}
-    animate={
-      isRevealed
-        ? { opacity: 1, y: 0, scale: 1 }
-        : { opacity: 0, y: 12, scale: 0.9 }
-    }
-    transition={{
-      opacity: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
-      y: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
-      scale: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
-    }}
-    className={`absolute flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-lime-500/20 bg-white/60 backdrop-blur-lg shadow-[0_10px_30px_rgba(132,204,22,0.12)] ${className}`}
-    style={enableAmbientMotion && isRevealed ? {
-      animation: `hero-float 5.8s ${delay + 0.35}s ease-in-out infinite`,
-      willChange: 'transform',
-    } : undefined}
-  >
-    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-lime-300/25 to-transparent" />
-    <Icon size={18} className="relative text-black/65" />
-  </Gsap.div>
-);
+const OrbitingDecoration = ({ icon: Icon, delay, className, isRevealed, enableAmbientMotion }) => {
+  const floatAnim = delay % 0.3 < 0.1 ? 'hero-float' : delay % 0.3 < 0.2 ? 'hero-float-alt' : 'hero-float-wide';
+  const floatDur = 5 + delay * 2;
+
+  return (
+    <Gsap.div
+      initial={false}
+      animate={
+        isRevealed
+          ? { opacity: 1, y: 0, scale: 1 }
+          : { opacity: 0, y: 12, scale: 0.9 }
+      }
+      transition={{
+        opacity: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
+        y: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
+        scale: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
+      }}
+      className={`absolute flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-lime-500/20 bg-white/60 backdrop-blur-lg shadow-[0_10px_30px_rgba(132,204,22,0.12)] ${className}`}
+      style={enableAmbientMotion && isRevealed ? {
+        animation: `${floatAnim} ${floatDur}s ${delay + 0.35}s ease-in-out infinite`,
+        willChange: 'transform',
+      } : undefined}
+    >
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-lime-300/25 to-transparent" />
+      <Icon size={18} className="relative text-black/65" />
+    </Gsap.div>
+  );
+};
 
 // === MAIN COMPONENT ===
 const HeroSection = memo(function HeroSection({ isRevealed = true }) {
@@ -220,29 +297,21 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           <LocationTimeBadge />
         </Gsap.div>
 
-        {/* 2. Massive Clear Typography */}
+        {/* 2. Massive Clear Typography with Interactive Effects */}
         <div className="flex flex-col items-center justify-center relative w-full mb-4 md:mb-5">
           {/* Left Decoration */}
           <OrbitingDecoration icon={Code2} delay={0.15} className="left-0 sm:left-2 lg:left-16 top-2" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
           <OrbitingDecoration icon={Terminal} delay={0.45} className="left-6 sm:left-12 lg:left-28 bottom-8 hidden sm:flex" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
 
-          <Gsap.h1
-            initial={false}
-            animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-            transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-black leading-[0.88]"
-          >
-            BRIAN
-          </Gsap.h1>
+          <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
+            <h1 className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-black leading-[0.88]">
+              <TextReveal text="BRIAN" baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
+            </h1>
 
-          <Gsap.h1
-            initial={false}
-            animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-            transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-transparent leading-[0.88] mt-2 sm:mt-0 font-outline-fallback"
-          >
-            PAMUNGKAS
-          </Gsap.h1>
+            <h1 className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-transparent leading-[0.88] mt-2 sm:mt-0 font-outline-fallback">
+              <TextReveal text="PAMUNGKAS" baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
+            </h1>
+          </ParallaxTilt>
 
           {/* Right Decoration */}
           <OrbitingDecoration icon={Database} delay={0.28} className="right-0 sm:right-2 lg:right-16 top-10" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
