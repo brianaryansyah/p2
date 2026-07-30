@@ -1,0 +1,69 @@
+{
+  "name": "motionfolio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source animated portfolio starter with React, Vite, Tailwind CSS, GSAP, Lenis, and an optional AI terminal assistant.",
+  "keywords": [
+    "portfolio",
+    "starter",
+    "template",
+    "react",
+    "vite",
+    "tailwindcss",
+    "gsap",
+    "scrolltrigger",
+    "lenis",
+    "animation",
+    "developer-portfolio"
+  ],
+  "license": "MIT",
+  "author": "Firdaus Zickrian",
+  "homepage": "https://github.com/zickrian/Portfolio-dev#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zickrian/Portfolio-dev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zickrian/Portfolio-dev/issues"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "gsap": "^3.14.2",
+    "lenis": "^1.3.17",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-icons": "^5.5.0",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.14.1"
+  },
+  "scripts": {
+    "start": "vite --host 0.0.0.0",
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "npm run build && npm audit --omit=dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "prettier": "^3.8.3",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.0.8"
+  }
+}
