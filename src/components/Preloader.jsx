@@ -66,7 +66,7 @@ const Preloader = ({ onComplete }) => {
         >
             {/* Top Bar */}
             <div className="flex justify-between items-start uppercase text-xs md:text-sm tracking-widest opacity-50">
-                <span>Zickrian Portfolio</span>
+                <span>Brian Portfolio</span>
                 <span>©2026</span>
             </div>
 

@@ -17,14 +17,14 @@
     "developer-portfolio"
   ],
   "license": "MIT",
-  "author": "Firdaus Zickrian",
-  "homepage": "https://github.com/zickrian/Portfolio-dev#readme",
+  "author": "Brian Aryansyah Pamungkas",
+  "homepage": "https://github.com/brianaryansyah/p2#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zickrian/Portfolio-dev.git"
+    "url": "https://github.com/brianaryansyah/p2.git"
   },
   "bugs": {
-    "url": "https://github.com/zickrian/Portfolio-dev/issues"
+    "url": "https://github.com/brianaryansyah/p2/issues"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",

@@ -17,14 +17,14 @@
 //   capabilities[] → high-level specializations
 export const PORTFOLIO_DATA = {
     profile: {
-        name: "Firdaus Khotibul Zickrian",
-        role: "AI Engineer & Full-Stack Developer",
-        bio: "Passionate about building intelligent systems that learn, adapt, and solve complex problems. Specializing in Generative AI, Deep Learning, and Modern Web Technologies.",
+        name: "Brian Aryansyah Pamungkas",
+        role: "Full-Stack Developer & AI Enthusiast",
+        bio: "Passionate about building modern web experiences with clean architecture and intelligent systems. Specializing in Full-Stack Development, UI/UX, and AI Integration.",
         location: "Indonesia",
-        email: "firdauskhotibulzickrian@gmail.com",
+        email: "brianaryansyah@example.com",
         socials: {
-            github: "https://github.com/zickrian",
-            linkedin: "https://linkedin.com/in/firdauskhotibulzickrian/"
+            github: "https://github.com/brianaryansyah",
+            linkedin: "https://linkedin.com/in/brianaryansyah"
         }
     },
     experience: [
@@ -152,7 +152,7 @@ export const PORTFOLIO_DATA = {
             title: "National Finalist - Base Indonesia Hackathon 2025",
             project: "Base Realms",
             description: "Built an onchain 16-bit RPG battle game on Base chain with QRIS payment integration, ERC-721/ERC-1155 NFTs, and seasonal reward pools. Onboards non-crypto users through familiar payment methods.",
-            team: "Terra Bit (Firdaus Khotibul Zickrian & Gagah Athallah Fatha)",
+            team: "Terra Bit (Brian Aryansyah Pamungkas & Gagah Athallah Fatha)",
             track: "Base Track",
             techStack: ["Solidity", "Next.js", "TypeScript", "JavaScript", "CSS"],
             links: {
