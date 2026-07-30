@@ -157,7 +157,7 @@ export const PORTFOLIO_DATA = {
             techStack: ["Solidity", "Next.js", "TypeScript", "JavaScript", "CSS"],
             links: {
                 devfolio: "https://devfolio.co/projects/base-realms-b63a",
-                github: "https://github.com/zickrian/Base-Realms",
+                github: "https://github.com/brianaryansyah/Base-Realms",
                 live: "https://baserealms.app/"
             }
         }
