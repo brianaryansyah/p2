@@ -178,6 +178,7 @@ export function generateSystemPrompt() {
 ### ABOUT YOU
 - Name: ${profile.name}
 - Role: ${profile.role}
+- Full Name: Brian Aryansyah Pamungkas
 - Bio: ${profile.bio}
 - Location: ${profile.location}
 - Email: ${profile.email}

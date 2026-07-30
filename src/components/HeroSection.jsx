@@ -41,6 +41,34 @@ const LocationTimeBadge = () => {
   );
 };
 
+// === WORD REVEAL FOR TAGLINES ===
+const WordReveal = ({ text, baseDelay = 0, stagger = 0.12, className = '', isRevealed = true, highlightIndex = -1 }) => {
+  const words = text.split(' ');
+
+  return (
+    <span className={`inline-flex flex-wrap justify-center gap-x-[0.25em] ${className}`}>
+      {words.map((word, i) => (
+        <Gsap.span
+          key={i}
+          initial={false}
+          animate={isRevealed
+            ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+            : { opacity: 0, y: 20, filter: 'blur(4px)' }
+          }
+          transition={{
+            duration: 0.65,
+            delay: baseDelay + i * stagger,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className={`inline-block ${i === highlightIndex ? 'bg-lime-400/30 px-2 rounded-md ring-1 ring-lime-500/20' : ''}`}
+        >
+          {word}
+        </Gsap.span>
+      ))}
+    </span>
+  );
+};
+
 // === TEXT REVEAL WITH LETTER SPLIT ===
 const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRevealed = true }) => {
   const letters = text.split('');
@@ -325,11 +353,17 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           transition={{ delay: 0.38, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col items-center gap-2 mt-0"
         >
-          <h2 className="text-[clamp(1.35rem,4.2vw,2.25rem)] font-bold text-black/80 tracking-tight flex items-center justify-center flex-wrap gap-2 px-2">
-            Crafting <span className="bg-lime-400/30 px-2 rounded-md ring-1 ring-lime-500/20">Modern</span> Web Experiences<span className="text-lime-500 font-extrabold -ml-1">.</span>
+          <h2 className="text-[clamp(1.35rem,4.2vw,2.25rem)] font-bold text-black/80 tracking-tight flex items-center justify-center flex-wrap px-2">
+            <WordReveal text="Crafting Modern Web Experiences" baseDelay={0.45} stagger={0.1} isRevealed={isRevealed} highlightIndex={1} />
+            <Gsap.span
+              initial={false}
+              animate={isRevealed ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: 0.95, duration: 0.4 }}
+              className="text-lime-500 font-extrabold"
+            >.</Gsap.span>
           </h2>
           <p className="font-sans text-base text-black/60 max-w-xl leading-7 mt-2 px-4">
-            Full-Stack Developer & AI Enthusiast specializing in performant, accessible digital products.
+            <WordReveal text="Full-Stack Developer & AI Enthusiast specializing in performant, accessible digital products." baseDelay={0.75} stagger={0.03} isRevealed={isRevealed} />
           </p>
         </Gsap.div>
 

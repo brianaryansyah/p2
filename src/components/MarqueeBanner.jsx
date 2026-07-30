@@ -1,12 +1,12 @@
 import { memo } from 'react';
 
 const skills = [
-  'Machine Learning',
-  'Deep Learning',
-  'Computer Vision',
-  'Natural Language Processing (NLP)',
-  'Machine Learning Operations (MLOps)',
-  'Data Analysis',
+  'React & Next.js',
+  'JavaScript / TypeScript',
+  'Tailwind CSS',
+  'RESTful APIs',
+  'UI / UX Architecture',
+  'Performance Tuning',
   'Web Development',
 ];
 
