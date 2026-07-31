@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Gsap } from "../utils/gsapAnimate";
+import { usePortfolioData } from "../hooks/usePortfolioData";
 
 // Simple Icons (brand icons) from react-icons
 import {
@@ -30,65 +31,45 @@ import {
 } from "react-icons/si";
 
 // Lucide icons for generic concepts
-import { Bot, BrainCircuit, Workflow, Globe, Cloud } from "lucide-react";
+import { Bot, BrainCircuit, Workflow, Globe, Cloud, Code2 } from "lucide-react";
 
-const stackCategories = [
-    {
-        title: "AI & Machine Learning",
-        description: "Intelligent systems & models",
-        skills: [
-            { name: "Python", icon: SiPython },
-            { name: "TensorFlow", icon: SiTensorflow },
-            { name: "PyTorch", icon: SiPytorch },
-            { name: "Keras", icon: SiKeras },
-            { name: "Scikit-Learn", icon: SiScikitlearn },
-            { name: "OpenCV", icon: SiOpencv },
-            { name: "Streamlit", icon: SiStreamlit },
-            { name: "Numpy", icon: SiNumpy },
-            { name: "Pandas", icon: SiPandas },
-            { name: "RAG", icon: BrainCircuit },
-            { name: "LLM", icon: Bot },
-        ]
-    },
-    {
-        title: "Frontend Eng.",
-        description: "Interactive web interfaces",
-        skills: [
-            { name: "React", icon: SiReact },
-            { name: "Next.js", icon: SiNextdotjs },
-            { name: "Tailwind CSS", icon: SiTailwindcss },
-            { name: "GSAP", icon: SiGreensock },
-            { name: "JavaScript", icon: SiJavascript },
-            { name: "HTML/CSS", icon: SiHtml5 },
-        ]
-    },
-    {
-        title: "Backend & API",
-        description: "Scalable server architectures",
-        skills: [
-            { name: "FastAPI", icon: SiFastapi },
-            { name: "ExpressJS", icon: SiExpress },
-            { name: "PostgreSQL", icon: SiPostgresql },
-            { name: "MySQL", icon: SiMysql },
-            { name: "Supabase", icon: SiSupabase },
-            { name: "REST APIs", icon: Globe },
-        ]
-    },
-    {
-        title: "DevOps & Cloud",
-        description: "Infrastructure & deployment",
-        skills: [
-            { name: "Docker", icon: SiDocker },
-            { name: "Microsoft Azure", icon: Cloud },
-            { name: "MLOps", icon: Workflow },
-            { name: "Git", icon: SiGit },
-            { name: "Linux", icon: SiLinux },
-        ]
-    }
-];
+// Resolve an icon for a skill name at render time so the tech stack stays
+// fully editable via the admin while keeping brand icons where known.
+const ICON_BY_NAME = {
+    Python: SiPython,
+    TensorFlow: SiTensorflow,
+    PyTorch: SiPytorch,
+    Keras: SiKeras,
+    "Scikit-Learn": SiScikitlearn,
+    OpenCV: SiOpencv,
+    Streamlit: SiStreamlit,
+    Numpy: SiNumpy,
+    Pandas: SiPandas,
+    React: SiReact,
+    "Next.js": SiNextdotjs,
+    "Tailwind CSS": SiTailwindcss,
+    GSAP: SiGreensock,
+    JavaScript: SiJavascript,
+    "HTML/CSS": SiHtml5,
+    FastAPI: SiFastapi,
+    ExpressJS: SiExpress,
+    PostgreSQL: SiPostgresql,
+    MySQL: SiMysql,
+    Supabase: SiSupabase,
+    Docker: SiDocker,
+    Git: SiGit,
+    Linux: SiLinux,
+    "Microsoft Azure": Cloud,
+    MLOps: Workflow,
+    RAG: BrainCircuit,
+    LLM: Bot,
+    "REST APIs": Globe,
+};
 
 const TechStack = () => {
     const containerRef = useRef(null);
+    const { techStack } = usePortfolioData();
+    const stackCategories = techStack;
 
     return (
         <section id="tech-stack-section" ref={containerRef} className="pt-20 md:pt-24 pb-24 md:pb-32 w-full relative bg-[#0A0A0A] overflow-hidden">
@@ -160,7 +141,7 @@ const TechStack = () => {
 
                                 <div className="md:w-2/3 flex flex-wrap gap-4 lg:gap-5 items-center">
                                     {category.skills.map((skill, idx) => {
-                                        const IconComponent = skill.icon;
+                                        const IconComponent = ICON_BY_NAME[skill.name] || Code2;
                                         return (
                                             <div
                                                 key={idx}
