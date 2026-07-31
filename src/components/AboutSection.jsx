@@ -1,6 +1,8 @@
 import { memo, useState, lazy, Suspense } from 'react';
 import { Gsap } from '../utils/gsapAnimate';
 import { Trophy, ArrowUpRight, MapPin } from 'lucide-react';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+import ProfileImage from './ProfileImage';
 
 const HackathonDetailModal = lazy(() => import('./HackathonDetailModal'));
 
@@ -122,6 +124,8 @@ const AchievementCard = ({ achievement, index, onClick }) => {
    ───────────────────────────────────────── */
 const AboutSection = memo(function AboutSection() {
   const [showHackathonDetail, setShowHackathonDetail] = useState(false);
+  const { settings } = useSiteSettings();
+  const profile = settings.profile;
 
   return (
     <section id="about-section" className="py-20 md:py-28 w-full relative bg-[#FAF9F6] overflow-hidden">
@@ -169,21 +173,15 @@ const AboutSection = memo(function AboutSection() {
                 {/* Hover desaturation overlay */}
                 <div className="absolute inset-0 bg-black/[0.12] group-hover:bg-transparent transition-colors duration-700 z-10 mix-blend-multiply pointer-events-none" />
 
-                <picture>
-                  <source srcSet="/profilee.webp" type="image/webp" />
-                  <img
-                    src="/profilee.webp"
-                    alt="Brian Aryansyah Pamungkas"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover object-top grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                  />
-                </picture>
+                <ProfileImage
+                  settings={settings}
+                  className="grayscale-[25%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                />
 
                 {/* Name plate at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 px-5 pt-10 pb-4 bg-gradient-to-t from-black/65 via-black/30 to-transparent z-20">
                   <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-white/50 mb-0.5">Name</p>
-                  <p className="text-white font-bold text-[15px] tracking-wide leading-snug">Brian Pamungkas</p>
+                  <p className="text-white font-bold text-[15px] tracking-wide leading-snug">{profile.name || 'Brian Pamungkas'}</p>
                 </div>
 
                 {/* Corner brackets */}

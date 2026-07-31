@@ -42,12 +42,6 @@ export default function Home() {
     }
   }, []);
 
-  // Preload profile image (optimized WebP with JPEG fallback)
-  useEffect(() => {
-    const profileImg = new Image();
-    profileImg.src = "/profile.webp";
-  }, []);
-
   // Manage body overflow based on scroll lock
   useEffect(() => {
     if (isScrollLocked) {
