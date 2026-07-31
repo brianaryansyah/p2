@@ -1,6 +1,8 @@
 import { memo, useRef, useState, useEffect } from 'react';
 import { Gsap, useGsapReducedMotion, useGsapScroll, useGsapTransform } from '../utils/gsapAnimate';
 import { Terminal, Code2, Database, Cpu, Download, ArrowUpRight } from 'lucide-react';
+import HeroNetwork from './HeroNetwork';
+import TerminalTyping from './TerminalTyping';
 
 // Shared Intl formatter — created once, reused on every tick
 const jakartaFormatter = new Intl.DateTimeFormat('en-US', {
@@ -289,6 +291,9 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
         {/* 4. Radial Vignette to blend gracefully with section edges */}
         <div className="absolute inset-0 bg-[#FAF9F6] [mask-image:radial-gradient(circle_at_center,transparent_0%,black_100%)] opacity-75" />
 
+        {/* 5. Interactive data-routing network (canvas, pointer-reactive) */}
+        <HeroNetwork className="absolute inset-0" />
+
         {/* Soft bottom fade */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#FAF9F6] to-transparent pointer-events-none" />
       </Gsap.div>
@@ -387,6 +392,16 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           >
             Download CV <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
           </a>
+        </Gsap.div>
+
+        {/* 5. Live terminal demo — signature interactive element */}
+        <Gsap.div
+          initial={false}
+          animate={isRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+          transition={{ delay: 0.62, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full"
+        >
+          <TerminalTyping className="mt-8" />
         </Gsap.div>
 
 
