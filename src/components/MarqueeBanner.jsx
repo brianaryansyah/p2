@@ -46,17 +46,18 @@ const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed
 
     let pos = 0;
     let raf = 0;
+    let timer = 0;
     let last = performance.now();
     let alive = true;
 
-    const frame = (now) => {
+    const tick = (now) => {
       if (!alive) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
 
       speedRef.current += (targetRef.current - speedRef.current) * Math.min(dt * 5, 1);
 
-      if (!pausedRef.current && !document.hidden) {
+      if (!pausedRef.current) {
         pos += baseSpeed * speedRef.current * direction * dt;
       }
 
@@ -66,7 +67,17 @@ const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed
         if (pos < 0) pos += half;
         track.style.transform = `translate3d(${(-pos).toFixed(2)}px, 0, 0)`;
       }
-      raf = requestAnimationFrame(frame);
+    };
+
+    const loop = (now) => {
+      tick(now);
+      raf = requestAnimationFrame(loop);
+    };
+
+    // rAF is frozen while the tab is hidden, so a fallback interval keeps the
+    // strip scrolling even when a notification or tab switch moves focus away.
+    const fallback = () => {
+      if (document.hidden) tick(performance.now());
     };
 
     const onResize = () => {
@@ -75,10 +86,13 @@ const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed
     };
     window.addEventListener('resize', onResize);
 
-    raf = requestAnimationFrame(frame);
+    raf = requestAnimationFrame(loop);
+    timer = window.setInterval(fallback, 33);
+
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
+      window.clearInterval(timer);
       window.removeEventListener('resize', onResize);
     };
   }, [baseSpeed, direction, pausedRef]);
