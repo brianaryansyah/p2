@@ -1,7 +1,9 @@
-import { useLayoutEffect } from "react";
+import { lazy, Suspense, useLayoutEffect } from "react";
 import { Routes, Route, useLocation, useNavigationType } from "react-router-dom";
 import Home from "./pages/Home";
 import ProjectDetailModal from "./components/projects/ProjectDetailModal";
+
+const Admin = lazy(() => import("./pages/Admin"));
 
 // Component untuk scroll ke atas setiap kali route berubah
 function ScrollToTop() {
@@ -106,6 +108,14 @@ export default function App() {
       <ScrollToTop />
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home />} />
+        <Route
+          path="/admin"
+          element={(
+            <Suspense fallback={<div className="min-h-screen bg-[#FAF9F6]" />}>
+              <Admin />
+            </Suspense>
+          )}
+        />
       </Routes>
 
       {backgroundLocation && (
