@@ -36,7 +36,8 @@ export default function ProjectGallery({ onOpenProject }) {
   const [maxScroll, setMaxScroll] = useState(0);
   const [enablePinnedScroll, setEnablePinnedScroll] = useState(true);
 
-  const { projects } = usePortfolioData();
+  const [data] = usePortfolioData();
+  const { projects } = data;
   const projectCount = projects.length;
 
   useEffect(() => {

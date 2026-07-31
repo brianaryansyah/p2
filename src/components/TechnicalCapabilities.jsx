@@ -19,7 +19,8 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
   const gridRef = useRef(null);
   const isInView = useGsapInView(gridRef, { once: true, amount: 0.15 });
   const [activeIndex, setActiveIndex] = useState(-1);
-  const { capabilities } = usePortfolioData();
+  const [data] = usePortfolioData();
+  const { capabilities } = data;
   const count = capabilities.length;
 
   useEffect(() => {

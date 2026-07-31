@@ -68,7 +68,8 @@ const ICON_BY_NAME = {
 
 const TechStack = () => {
     const containerRef = useRef(null);
-    const { techStack } = usePortfolioData();
+    const [data] = usePortfolioData();
+    const { techStack } = data;
     const stackCategories = techStack;
 
     return (

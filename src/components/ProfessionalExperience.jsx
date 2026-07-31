@@ -105,7 +105,8 @@ const ExperienceItem = ({ experience, isExpanded, onToggle, index }) => {
 
 const ProfessionalExperience = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const { experience } = usePortfolioData();
+  const [data] = usePortfolioData();
+  const { experience } = data;
   const experiences = experience;
 
   const statCards = useMemo(() => {
