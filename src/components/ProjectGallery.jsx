@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PROJECT_META } from "../data/projectMeta";
+import { usePortfolioData } from "../hooks/usePortfolioData";
 
 const INDICATOR_CARD_WIDTH = 600;
 const INDICATOR_GAP = 48;
@@ -35,6 +35,9 @@ export default function ProjectGallery({ onOpenProject }) {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
   const [enablePinnedScroll, setEnablePinnedScroll] = useState(true);
+
+  const { projects } = usePortfolioData();
+  const projectCount = projects.length;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -72,11 +75,9 @@ export default function ProjectGallery({ onOpenProject }) {
   // Preload gambar pertama untuk smooth loading
   useEffect(() => {
     const firstImage = new Image();
-    firstImage.src = cloudinarySrc(PROJECT_META[0]?.img, 800);
+    firstImage.src = cloudinarySrc(projects[0]?.img, 800);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const projects = PROJECT_META;
-  const projectCount = projects.length;
 
   useEffect(() => {
     if (!enablePinnedScroll) {
