@@ -1,7 +1,6 @@
-import { PORTFOLIO_DATA } from '../data/portfolioData';
+import { getPortfolioData } from '../data/portfolioStore';
 import { getSectionLabels } from '../data/sectionRegistry';
 import { PROJECT_DETAILS_DATA } from '../data/projectDetailsData';
-import { PROJECT_META } from '../data/projectMeta';
 
 // ─── Project Knowledge Base ──────────────────────────────────────
 // Uses pure data objects (no JSX) to avoid pulling React components
@@ -17,8 +16,9 @@ const PROJECT_DETAILS = PROJECT_DETAILS_DATA;
  * @returns {string}
  */
 function serializeExperience() {
-  return PORTFOLIO_DATA.experience
-    .map(exp => `- ${exp.title} (${exp.period}): ${exp.description.join(' ')}`)
+  const data = getPortfolioData();
+  return data.experience
+    .map(exp => `- ${exp.title || exp.role || exp.company} (${exp.period}): ${(exp.description || []).join(' ')}`)
     .join('\n');
 }
 
@@ -27,10 +27,10 @@ function serializeExperience() {
  * @returns {string}
  */
 function serializeTechStack() {
+  const data = getPortfolioData();
   const grouped = {};
-  for (const tech of PORTFOLIO_DATA.techStack) {
-    if (!grouped[tech.category]) grouped[tech.category] = [];
-    grouped[tech.category].push(tech.name);
+  for (const category of data.techStack) {
+    grouped[category.title || category.category || 'General'] = (category.skills || []).map((s) => s.name);
   }
   return Object.entries(grouped)
     .map(([category, techs]) => `- ${category}: ${techs.join(', ')}`)
@@ -62,15 +62,16 @@ function serializeProjects() {
  * @returns {string}
  */
 function serializeAchievements() {
-  if (!PORTFOLIO_DATA.achievements?.length) return 'No achievements listed.';
-  return PORTFOLIO_DATA.achievements
+  const data = getPortfolioData();
+  if (!data.achievements?.length) return 'No achievements listed.';
+  return data.achievements
     .map(a => [
       `- ${a.title}`,
       `  Project: ${a.project}`,
       `  Description: ${a.description}`,
       `  Team: ${a.team}`,
       `  Track: ${a.track}`,
-      `  Tech: ${a.techStack.join(', ')}`,
+      `  Tech: ${(a.techStack || []).join(', ')}`,
       a.links?.live ? `  Live: ${a.links.live}` : '',
       a.links?.github ? `  Repo: ${a.links.github}` : '',
       a.links?.devfolio ? `  Devfolio: ${a.links.devfolio}` : '',
@@ -83,8 +84,9 @@ function serializeAchievements() {
  * @returns {string}
  */
 function serializeCapabilities() {
-  if (!PORTFOLIO_DATA.capabilities?.length) return 'No capabilities listed.';
-  return PORTFOLIO_DATA.capabilities.map(c => `- ${c}`).join('\n');
+  const data = getPortfolioData();
+  if (!data.capabilities?.length) return 'No capabilities listed.';
+  return data.capabilities.map(c => `- ${c.title || c}`).join('\n');
 }
 
 function normalize(text) {
@@ -135,7 +137,8 @@ export function buildScopedContext(userMessage) {
       .join('\n')
     : '- No highly matched project; prioritize concise profile-level answers.';
 
-  const metaMatches = PROJECT_META
+  const metaMatches = getPortfolioData()
+    .projects
     .filter(project => query.includes(project.slug.toLowerCase()) || query.includes(project.title.toLowerCase()))
     .slice(0, 3)
     .map(project => `- ${project.title} (${project.slug})`)
@@ -169,7 +172,7 @@ export function buildScopedContext(userMessage) {
  * @returns {string} The complete system prompt
  */
 export function generateSystemPrompt() {
-  const { profile } = PORTFOLIO_DATA;
+  const { profile } = getPortfolioData();
 
   return `You ARE Brian Aryansyah Pamungkas. You are NOT an assistant or a bot. You are Brian himself, a Full-Stack Developer, answering visitors who come to your portfolio website. Speak in FIRST PERSON at all times ("saya", "aku", "gue", "I", "my", "me").
 

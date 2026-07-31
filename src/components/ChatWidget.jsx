@@ -5,8 +5,7 @@ import { streamCerebras } from "../services/cerebras";
 import { resolveAction, detectOffTopic, detectLanguage } from "../services/intentRouter";
 import { sanitizeAssistantResponse } from '../services/responseSanitizer';
 import { ACTION_TO_ELEMENT } from "../data/sectionRegistry";
-import { PROJECT_META } from "../data/projectMeta";
-import { PORTFOLIO_DATA } from "../data/portfolioData";
+import { getPortfolioData } from "../data/portfolioStore";
 import { PROJECT_DETAILS_DATA } from "../data/projectDetailsData";
 import { exponentialEaseOut } from "../utils/easing";
 
@@ -35,7 +34,8 @@ const COMMANDS = {
     ls: {
         desc: "List all projects",
         run: () => {
-            const lines = PROJECT_META.map((p, i) =>
+            const projects = getPortfolioData().projects;
+            const lines = projects.map((p, i) =>
                 `  ${String(i + 1).padStart(2, ' ')}  ${p.slug.padEnd(24, ' ')} ${p.category}`
             );
             return [
@@ -44,7 +44,7 @@ const COMMANDS = {
                 "  ──  ───────────────────────── ──────────────────────",
                 ...lines,
                 "",
-                `  Total: ${PROJECT_META.length} projects`,
+                `  Total: ${projects.length} projects`,
                 "  Use 'cat <slug>' for details."
             ].join('\n');
         }
@@ -52,8 +52,9 @@ const COMMANDS = {
     neofetch: {
         desc: "System info",
         run: () => {
-            const p = PORTFOLIO_DATA.profile;
-            const techs = PORTFOLIO_DATA.techStack.map(t => t.name);
+            const data = getPortfolioData();
+            const p = data.profile;
+            const techs = data.techStack.flatMap((c) => (c.skills || []).map((s) => s.name));
             const techRows = [];
             for (let i = 0; i < techs.length; i += 5) {
                 techRows.push(techs.slice(i, i + 5).join(', '));
@@ -72,7 +73,7 @@ const COMMANDS = {
                 "  ⣿⣿    ─────────────────────────",
                 "  ⣿⣿    Stack:",
                 ...techRows.map(row => `  ⣿⣿      ${row}`),
-                `  ⣿⣿    Projects : ${PROJECT_META.length}`,
+                `  ⣿⣿    Projects : ${data.projects.length}`,
             ].join('\n');
         }
     },
@@ -92,12 +93,12 @@ const handleCat = (args) => {
         return "Usage: cat <project-slug>\nUse 'ls' to see available slugs.";
     }
     const slug = args.toLowerCase().trim();
-    const project = PROJECT_META.find(p =>
+    const project = getPortfolioData().projects.find(p =>
         p.slug.toLowerCase() === slug ||
         p.title.toLowerCase().includes(slug)
     );
     if (!project) {
-        const slugList = PROJECT_META.map(p => `  - ${p.slug}`).join('\n');
+        const slugList = getPortfolioData().projects.map(p => `  - ${p.slug}`).join('\n');
         return `Project '${args}' not found.\n\nAvailable projects:\n${slugList}`;
     }
     const detail = getProjectDetail(project.slug);
@@ -253,7 +254,7 @@ const ChatWidget = ({ isOpen: controlledIsOpen, onOpenChange }) => {
 
         // Open a specific project detail modal
         if (action === "open_project" && params?.project_name) {
-            const project = PROJECT_META.find(p =>
+            const project = getPortfolioData().projects.find(p =>
                 p.title.toLowerCase().includes(params.project_name.toLowerCase()) ||
                 p.slug.toLowerCase().includes(params.project_name.toLowerCase())
             );
