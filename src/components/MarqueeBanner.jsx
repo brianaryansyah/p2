@@ -33,7 +33,7 @@ const SkillItem = ({ skill, dark }) => (
  * Speed is lerped toward the hover target instead of swapping the animation,
  * so boosting never causes a restart or a visible pause.
  */
-const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed, gapClass, edgeFrom, edgeWidth, pausedRef }) {
+const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed, gapClass, textClass, edgeFrom, edgeWidth, pausedRef }) {
   const rowRef = useRef(null);
   const trackRef = useRef(null);
   const speedRef = useRef(1);
@@ -92,7 +92,7 @@ const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed
     >
       <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className={`flex shrink-0 items-center ${gapClass}`}>
+          <div key={i} className={`flex shrink-0 items-center ${textClass} ${gapClass}`}>
             {skills.map((skill, j) => (
               <SkillItem key={j} skill={skill} dark={dark} />
             ))}
@@ -140,6 +140,7 @@ const MarqueeBanner = memo(function MarqueeBanner() {
             direction={1}
             baseSpeed={110}
             gapClass="gap-6 md:gap-14 pr-6 md:pr-14"
+            textClass="text-lg sm:text-2xl md:text-4xl font-black uppercase"
             edgeFrom="from-black"
             edgeWidth="w-16 md:w-32"
             pausedRef={pausedRef}
@@ -154,6 +155,7 @@ const MarqueeBanner = memo(function MarqueeBanner() {
             direction={-1}
             baseSpeed={90}
             gapClass="gap-6 md:gap-12 pr-6 md:pr-12"
+            textClass="text-base sm:text-lg md:text-2xl font-black uppercase"
             edgeFrom="from-lime-400"
             edgeWidth="w-12 md:w-24"
             pausedRef={pausedRef}
