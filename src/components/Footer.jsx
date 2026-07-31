@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Gsap } from '../utils/gsapAnimate';
-import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowUpRight, Shield } from 'lucide-react';
 import { exponentialEaseOut } from '../utils/easing';
 
 const DiscordIcon = ({ className = '', size = 16 }) => (
@@ -182,8 +183,15 @@ const Footer = memo(function Footer() {
             00:00:00 LOCAL
           </div>
 
-          <div className="font-mono text-[10px] md:text-xs text-white/40 uppercase tracking-[0.14em] md:tracking-[0.2em] text-center md:text-right">
+          <div className="font-mono text-[10px] md:text-xs text-white/40 uppercase tracking-[0.14em] md:tracking-[0.2em] text-center md:text-right flex items-center gap-4">
             &copy; {new Date().getFullYear()} BRIAN ARYANSYAH PAMUNGKAS. ALL RIGHTS RESERVED.
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-white/30 hover:text-lime-400 transition-colors border border-white/10 rounded-full px-2.5 py-1 hover:border-lime-400/40"
+              aria-label="Open site admin"
+            >
+              <Shield size={11} /> ADMIN
+            </Link>
           </div>
         </div>
 
