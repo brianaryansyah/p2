@@ -1,21 +1,26 @@
 import { memo, useRef, useState, useEffect } from 'react';
 import { Gsap, useGsapInView } from '../utils/gsapAnimate';
 import { Cpu, Network, Eye, MessageSquare, Infinity, BarChart2, MonitorSmartphone } from 'lucide-react';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 
-const CAPABILITIES = [
-  { title: 'Machine Learning', desc: 'Predictive modeling, regression, and algorithmic classification built for scale.', icon: BarChart2 },
-  { title: 'Deep Learning', desc: 'Neural architectures for complex pattern recognition and high-accuracy deployments.', icon: Network },
-  { title: 'Computer Vision', desc: 'Image processing, real-time object detection, and robust spatial analytics.', icon: Eye },
-  { title: 'NLP & GenAI', desc: 'Large language models, semantic analysis, and human-like conversational AI.', icon: MessageSquare },
-  { title: 'MLOps', desc: 'End-to-end model deployment frameworks, continuous monitoring, and automation.', icon: Infinity },
-  { title: 'Data Analysis', desc: 'Advanced statistical modeling, big data wrangling, and actionable visualizations.', icon: Cpu },
-  { title: 'Web Engineering', desc: 'Scalable full-stack systems with ultra-responsive, accessible interfaces.', icon: MonitorSmartphone },
-];
+// Icons are resolved by capability title so the list stays editable via the
+// admin while keeping a matching icon for every known capability.
+const ICON_BY_TITLE = {
+  'Machine Learning': BarChart2,
+  'Deep Learning': Network,
+  'Computer Vision': Eye,
+  'NLP & GenAI': MessageSquare,
+  MLOps: Infinity,
+  'Data Analysis': Cpu,
+  'Web Engineering': MonitorSmartphone,
+};
 
 const TechnicalCapabilities = memo(function TechnicalCapabilities() {
   const gridRef = useRef(null);
   const isInView = useGsapInView(gridRef, { once: true, amount: 0.15 });
   const [activeIndex, setActiveIndex] = useState(-1);
+  const { capabilities } = usePortfolioData();
+  const count = capabilities.length;
 
   useEffect(() => {
     if (isInView) {
@@ -26,7 +31,7 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
         currentIndex++;
 
         // Clear when it reaches past the ghost cell
-        if (currentIndex > CAPABILITIES.length) {
+        if (currentIndex > count) {
           setTimeout(() => setActiveIndex(-1), 700);
           clearInterval(interval);
         }
@@ -34,7 +39,7 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
 
       return () => clearInterval(interval);
     }
-  }, [isInView]);
+  }, [isInView, count]);
 
   return (
     <section id="capabilities-section" className="pt-24 pb-32 w-full relative bg-[#FAF9F6] overflow-hidden">
@@ -77,8 +82,9 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 border-l-2 border-t-2 border-black group/grid bg-[#FAF9F6]"
         >
-          {CAPABILITIES.map((cap, i) => {
+          {capabilities.map((cap, i) => {
             const isActive = activeIndex === i;
+            const CapIcon = ICON_BY_TITLE[cap.title] || Cpu;
             return (
               <div
                 key={i}
@@ -89,7 +95,7 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
                   <span className={`font-mono text-xs md:text-sm font-bold text-black group-hover/cell:text-lime-400 transition-colors duration-500 tracking-[0.12em] md:tracking-[0.16em] ${isActive ? '!text-lime-400' : ''}`}>
                     0{i + 1}
                   </span>
-                  <cap.icon className={`w-5 h-5 md:w-8 md:h-8 text-black group-hover/cell:text-lime-400 transition-colors duration-500 ${isActive ? '!text-lime-400' : ''}`} strokeWidth={2} />
+                  <CapIcon className={`w-5 h-5 md:w-8 md:h-8 text-black group-hover/cell:text-lime-400 transition-colors duration-500 ${isActive ? '!text-lime-400' : ''}`} strokeWidth={2} />
                 </div>
 
                 {/* Center massive number watermark — hidden on mobile */}
@@ -121,7 +127,7 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
 
           {/* Ghost Cell for layout balance on 4-col XL screens */}
           {(() => {
-            const isGhostActive = activeIndex === CAPABILITIES.length;
+            const isGhostActive = activeIndex === count;
             return (
               <div className={`flex border-r-2 border-b-2 border-black p-5 md:p-8 lg:p-10 min-h-[180px] md:min-h-[300px] lg:min-h-[340px] bg-transparent flex-col justify-center items-center text-center group/ghost hover:bg-[#0A0A0A] transition-colors duration-500 cursor-crosshair ${isGhostActive ? '!bg-[#0A0A0A]' : ''}`}>
                 <div className={`w-10 h-10 md:w-16 md:h-16 rounded-full border-2 border-black group-hover/ghost:border-lime-400 flex items-center justify-center mb-4 md:mb-6 animate-[spin_10s_linear_infinite] group-hover/ghost:animate-[spin_3s_linear_infinite] transition-all duration-500 ${isGhostActive ? '!border-lime-400 !animate-[spin_3s_linear_infinite]' : ''}`}>
