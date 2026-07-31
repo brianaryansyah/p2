@@ -5,7 +5,7 @@ import { streamCerebras } from "../services/cerebras";
 import { resolveAction, detectOffTopic, detectLanguage } from "../services/intentRouter";
 import { sanitizeAssistantResponse } from '../services/responseSanitizer';
 import { ACTION_TO_ELEMENT } from "../data/sectionRegistry";
-import { getPortfolioData } from "../data/portfolioStore";
+import { getPortfolioData, getLiveProfile } from "../data/portfolioStore";
 import { PROJECT_DETAILS_DATA } from "../data/projectDetailsData";
 import { exponentialEaseOut } from "../utils/easing";
 
@@ -53,7 +53,7 @@ const COMMANDS = {
         desc: "System info",
         run: () => {
             const data = getPortfolioData();
-            const p = data.profile;
+            const p = getLiveProfile();
             const techs = data.techStack.flatMap((c) => (c.skills || []).map((s) => s.name));
             const techRows = [];
             for (let i = 0; i < techs.length; i += 5) {

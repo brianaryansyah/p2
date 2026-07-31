@@ -170,6 +170,28 @@ export function getPortfolioData() {
   return cached;
 }
 
+// Profile is also managed by the admin's Profile tab via `useSiteSettings`
+// (separate storage key). This merges that override so non-React modules
+// (AI context, chat terminal) always read the current identity.
+export function getLiveProfile() {
+  const { profile } = getPortfolioData();
+  if (typeof window === 'undefined') return profile;
+  try {
+    const raw = window.localStorage.getItem('site_settings_v1');
+    if (!raw) return profile;
+    const settings = JSON.parse(raw);
+    const override = settings?.profile;
+    if (!override) return profile;
+    return {
+      ...profile,
+      ...override,
+      socials: { ...profile.socials, ...(override.socials || {}) },
+    };
+  } catch {
+    return profile;
+  }
+}
+
 export function setPortfolioSection(key, value) {
   overrides = { ...overrides, [key]: value };
   persist();

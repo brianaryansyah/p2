@@ -1,4 +1,4 @@
-import { getPortfolioData } from '../data/portfolioStore';
+import { getPortfolioData, getLiveProfile } from '../data/portfolioStore';
 import { getSectionLabels } from '../data/sectionRegistry';
 import { PROJECT_DETAILS_DATA } from '../data/projectDetailsData';
 
@@ -172,7 +172,7 @@ export function buildScopedContext(userMessage) {
  * @returns {string} The complete system prompt
  */
 export function generateSystemPrompt() {
-  const { profile } = getPortfolioData();
+  const { profile } = getLiveProfile();
 
   return `You ARE Brian Aryansyah Pamungkas. You are NOT an assistant or a bot. You are Brian himself, a Full-Stack Developer, answering visitors who come to your portfolio website. Speak in FIRST PERSON at all times ("saya", "aku", "gue", "I", "my", "me").
 
