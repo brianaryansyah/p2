@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSiteSettings, SITE_SETTINGS_STORAGE_KEY } from '../hooks/useSiteSettings';
+import { usePortfolioData } from '../hooks/usePortfolioData';
+import CollectionEditor from './admin/CollectionEditor';
 import {
   ArrowLeft,
   Upload,
@@ -14,6 +16,7 @@ import {
   Image as ImageIcon,
   Database,
   UserRound,
+  LayoutGrid,
   AlertTriangle,
 } from 'lucide-react';
 
@@ -23,6 +26,7 @@ const DEFAULT_PASS = 'admin123';
 const TABS = [
   { id: 'photo', label: 'Photo', icon: ImageIcon },
   { id: 'profile', label: 'Profile', icon: UserRound },
+  { id: 'content', label: 'Content', icon: LayoutGrid },
   { id: 'data', label: 'Data', icon: Database },
 ];
 
@@ -68,8 +72,164 @@ const inputClass =
 const btnBase =
   'inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed';
 
+// ─── Content editors ─────────────────────────────────────────────
+const projectFields = [
+  { key: 'id', label: 'ID', readOnly: true },
+  { key: 'slug', label: 'Slug', readOnly: true, hint: 'Detail pages are code-managed, so slugs are locked.' },
+  { key: 'title', label: 'Title' },
+  { key: 'category', label: 'Category' },
+  { key: 'description', label: 'Description', type: 'textarea' },
+  { key: 'img', label: 'Image URL', full: true },
+  { key: 'color', label: 'Accent color class', hint: 'Tailwind color, e.g. bg-lime-400' },
+];
+
+const experienceFields = [
+  { key: 'company', label: 'Company / Organization' },
+  { key: 'role', label: 'Role' },
+  { key: 'period', label: 'Period', hint: 'e.g. Jan 2025 - Present' },
+  { key: 'impact', label: 'Impact summary', type: 'textarea' },
+  {
+    key: 'description',
+    label: 'Details (one per line)',
+    type: 'textarea',
+    get: (it) => (it.description || []).join('\n'),
+    set: (it, v) => { it.description = v.split('\n').map((s) => s.trim()).filter(Boolean); },
+  },
+  {
+    key: 'stack',
+    label: 'Tags (comma separated)',
+    get: (it) => (it.stack || []).join(', '),
+    set: (it, v) => { it.stack = v.split(',').map((s) => s.trim()).filter(Boolean); },
+  },
+];
+
+const techStackFields = [
+  { key: 'title', label: 'Category title' },
+  { key: 'description', label: 'Tagline' },
+  {
+    key: 'skills',
+    label: 'Skills (comma separated)',
+    full: true,
+    get: (it) => (it.skills || []).map((s) => s.name).join(', '),
+    set: (it, v) => { it.skills = v.split(',').map((s) => s.trim()).filter(Boolean).map((name) => ({ name })); },
+  },
+];
+
+const capabilitiesFields = [
+  { key: 'title', label: 'Title' },
+  { key: 'desc', label: 'Description', type: 'textarea' },
+];
+
+const achievementsFields = [
+  { key: 'title', label: 'Title' },
+  { key: 'project', label: 'Project' },
+  { key: 'description', label: 'Description', type: 'textarea' },
+  { key: 'team', label: 'Team' },
+  { key: 'track', label: 'Track' },
+  {
+    key: 'techStack',
+    label: 'Tech (comma separated)',
+    get: (it) => (it.techStack || []).join(', '),
+    set: (it, v) => { it.techStack = v.split(',').map((s) => s.trim()).filter(Boolean); },
+  },
+  { key: 'links.github', label: 'GitHub URL', full: true },
+  { key: 'links.devfolio', label: 'Devfolio URL', full: true },
+  { key: 'links.live', label: 'Live URL', full: true },
+];
+
+const CONTENT_SECTIONS = [
+  { id: 'projects', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'techStack', label: 'Tech Stack' },
+  { id: 'capabilities', label: 'Capabilities' },
+  { id: 'achievements', label: 'Achievements' },
+];
+
+const ContentTab = ({ data, updateSection }) => {
+  const [section, setSection] = useState('projects');
+  const projects = data.projects || [];
+  const nextProjectId = projects.reduce((max, p) => Math.max(max, Number(p.id) || 0), 0) + 1;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center flex-wrap gap-1 border-b border-black/10 pb-px">
+        {CONTENT_SECTIONS.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSection(s.id)}
+            className={`px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] transition-all border-b-2 -mb-px ${section === s.id ? 'border-lime-500 text-black' : 'border-transparent text-black/40 hover:text-black/70'}`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {section === 'projects' && (
+        <CollectionEditor
+          title="Projects"
+          subtitle="Cards shown in the Past Explorations gallery and known to the AI assistant."
+          items={projects}
+          onChange={(items) => updateSection('projects', items)}
+          fields={projectFields}
+          itemLabel="title"
+          makeNew={() => ({ id: nextProjectId, slug: '', title: '', category: '', description: '', img: '', color: 'bg-lime-400' })}
+        />
+      )}
+
+      {section === 'experience' && (
+        <CollectionEditor
+          title="Experience"
+          subtitle="Timeline cards in the Professional Experience section."
+          items={data.experience || []}
+          onChange={(items) => updateSection('experience', items)}
+          fields={experienceFields}
+          itemLabel="role"
+          makeNew={() => ({ company: '', role: '', period: '', impact: '', stack: [], description: [] })}
+        />
+      )}
+
+      {section === 'techStack' && (
+        <CollectionEditor
+          title="Tech Stack"
+          subtitle="Categories shown in the Technical Arsenal section. Brand icons auto-resolve by skill name."
+          items={data.techStack || []}
+          onChange={(items) => updateSection('techStack', items)}
+          fields={techStackFields}
+          itemLabel="title"
+          makeNew={() => ({ title: '', description: '', skills: [] })}
+        />
+      )}
+
+      {section === 'capabilities' && (
+        <CollectionEditor
+          title="Capabilities"
+          subtitle="Cells in the Capabilities Matrix section."
+          items={data.capabilities || []}
+          onChange={(items) => updateSection('capabilities', items)}
+          fields={capabilitiesFields}
+          itemLabel="title"
+          makeNew={() => ({ title: '', desc: '' })}
+        />
+      )}
+
+      {section === 'achievements' && (
+        <CollectionEditor
+          title="Achievements"
+          subtitle="Awards and hackathons referenced by the AI assistant."
+          items={data.achievements || []}
+          onChange={(items) => updateSection('achievements', items)}
+          fields={achievementsFields}
+          itemLabel="title"
+          makeNew={() => ({ title: '', project: '', description: '', team: '', track: '', techStack: [], links: { github: '', devfolio: '', live: '' } })}
+        />
+      )}
+    </div>
+  );
+};
+
 const Admin = () => {
   const { settings, update, reset } = useSiteSettings();
+  const [contentData, updateSection, setAllContent, resetAllContent] = usePortfolioData();
   const [unlocked, setUnlocked] = useState(false);
   const [passInput, setPassInput] = useState('');
   const [passError, setPassError] = useState(false);
@@ -150,6 +310,33 @@ const Admin = () => {
         const parsed = JSON.parse(reader.result);
         update(parsed);
         flash('Config imported');
+      } catch {
+        flash('Invalid JSON file');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const exportContent = () => {
+    const blob = new Blob([JSON.stringify(contentData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'portfolio-content.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    flash('Content exported');
+  };
+
+  const importContent = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        setAllContent(parsed);
+        flash('Content imported');
       } catch {
         flash('Invalid JSON file');
       }
@@ -341,6 +528,11 @@ const Admin = () => {
           </div>
         )}
 
+        {/* ── Content tab ── */}
+        {tab === 'content' && (
+          <ContentTab data={contentData} updateSection={updateSection} />
+        )}
+
         {/* ── Data tab ── */}
         {tab === 'data' && (
           <div className="space-y-6">
@@ -364,6 +556,25 @@ const Admin = () => {
               <p className="mt-4 font-mono text-[10px] text-black/35 break-all">
                 storage key: {SITE_SETTINGS_STORAGE_KEY}
               </p>
+            </div>
+
+            <div className="bg-white border border-black/10 rounded-lg p-6 shadow-sm">
+              <h2 className="font-bold text-lg mb-1">Site content</h2>
+              <p className="text-sm text-black/50 mb-5">
+                Backup the editable content (projects, experience, tech stack, capabilities, achievements).
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button onClick={exportContent} className={`${btnBase} bg-black text-white hover:bg-lime-500 hover:text-black`}>
+                  <Download size={14} /> Export content
+                </button>
+                <label className={`${btnBase} bg-white border border-black/20 hover:bg-black hover:text-white cursor-pointer`}>
+                  <UploadCloud size={14} /> Import content
+                  <input type="file" accept="application/json" className="hidden" onChange={importContent} />
+                </label>
+                <button onClick={resetAllContent} className={`${btnBase} bg-red-50 text-red-700 border border-red-300 hover:bg-red-600 hover:text-white`}>
+                  <RotateCcw size={14} /> Reset content
+                </button>
+              </div>
             </div>
 
             <div className="bg-white border border-black/10 rounded-lg p-6 shadow-sm">
