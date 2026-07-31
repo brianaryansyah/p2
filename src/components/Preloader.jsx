@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Gsap } from "../utils/gsapAnimate";
+import BrandLogo from "./BrandLogo";
 
 const words = ["INITIALIZING", "LOADING ASSETS", "COMPILING", "READY"];
 
@@ -66,7 +67,10 @@ const Preloader = ({ onComplete }) => {
         >
             {/* Top Bar */}
             <div className="flex justify-between items-start uppercase text-xs md:text-sm tracking-widest opacity-50">
-                <span>Brian Portfolio</span>
+                <span className="flex items-center gap-2">
+                    <BrandLogo className="w-5 h-5 md:w-6 md:h-6" />
+                    BRIAN.PORTFOLIO
+                </span>
                 <span>©2026</span>
             </div>
 

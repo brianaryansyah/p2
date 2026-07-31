@@ -1,4 +1,10 @@
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" fill="black"/>
-  <path d="M120 120H392V180L200 332H392V392H120V332L312 180H120V120Z" fill="#a3e635"/>
+  <rect width="512" height="512" rx="120" fill="#0a0a0a"/>
+  <g stroke="#a3e635" stroke-opacity="0.09">
+    <path d="M0 128H512M0 256H512M0 384H512M128 0V512M256 0V512M384 0V512"/>
+  </g>
+  <rect x="14" y="14" width="484" height="484" rx="106" stroke="#a3e635" stroke-opacity="0.4" stroke-width="6" fill="none"/>
+  <text x="88" y="338" font-family="'Space Grotesk','Arial Black','Helvetica Neue',Arial,sans-serif" font-size="226" font-weight="900" letter-spacing="-4" fill="#a3e635">BA</text>
+  <rect x="396" y="200" width="28" height="148" rx="14" fill="#a3e635"/>
+  <circle cx="448" cy="72" r="12" fill="#a3e635"/>
 </svg>

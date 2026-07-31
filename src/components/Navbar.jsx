@@ -2,6 +2,7 @@ import { useState, memo, useEffect, useRef } from 'react';
 import { Gsap, GsapPresence } from '../utils/gsapAnimate';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import Magnetic from './Magnetic';
+import BrandLogo from './BrandLogo';
 import { exponentialEaseOut } from '../utils/easing';
 
 const NAV_ITEMS = [
@@ -123,6 +124,9 @@ const Navbar = memo(function Navbar() {
 
           <span className={`text-sm font-black tracking-[0.16em] md:tracking-[0.2em] uppercase transition-colors duration-300 ${isOnDarkSection ? 'text-white' : 'text-black'}`}>
             Brian
+          </span>
+          <span className="hidden sm:inline-flex items-center gap-2 ml-1">
+            <BrandLogo className="w-6 h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105" />
           </span>
         </div>
       </Magnetic>
