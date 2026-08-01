@@ -108,7 +108,8 @@ const Navbar = memo(function Navbar() {
     <nav className={`fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 pointer-events-none transition-all duration-500`}>
       {/* ── Logo ── */}
       <Magnetic>
-        <div
+        <button
+          type="button"
           onClick={() => {
             if (window.lenisInstance && typeof window.lenisInstance.scrollTo === 'function') {
               window.lenisInstance.scrollTo(0, {
@@ -119,7 +120,8 @@ const Navbar = memo(function Navbar() {
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className={`group pointer-events-auto flex items-center gap-3 px-5 py-2.5 rounded-full backdrop-blur-md border transition-all duration-500 cursor-pointer ${isOnDarkSection ? 'bg-black/25 border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.22)]' : scrolled ? 'bg-white/80 border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]' : 'bg-transparent border-transparent'}`}
+          aria-label="Back to top"
+          className={`group pointer-events-auto flex items-center gap-3 px-5 py-2.5 rounded-full backdrop-blur-md border transition-all duration-500 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400 ${isOnDarkSection ? 'bg-black/25 border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.22)]' : scrolled ? 'bg-white/80 border-black/5 shadow-[0_8px_32px_rgba(0,0,0,0.04)]' : 'bg-transparent border-transparent'}`}
         >
 
           <span className={`text-sm font-black tracking-[0.16em] md:tracking-[0.2em] uppercase transition-colors duration-300 ${isOnDarkSection ? 'text-white' : 'text-black'}`}>
@@ -128,7 +130,7 @@ const Navbar = memo(function Navbar() {
           <span className="hidden sm:inline-flex items-center gap-2 ml-1">
             <BrandLogo className="w-6 h-6 md:w-7 md:h-7 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105" />
           </span>
-        </div>
+        </button>
       </Magnetic>
 
       {/* ── Mobile Menu Toggle ── */}
