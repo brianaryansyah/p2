@@ -23,6 +23,8 @@ const Navbar = memo(function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const previousBodyOverflowRef = useRef('');
   const menuStoppedLenisRef = useRef(false);
+  const toggleRef = useRef(null);
+  const menuPanelRef = useRef(null);
 
   useEffect(() => {
     let ticking = false;
@@ -84,6 +86,38 @@ const Navbar = memo(function Navbar() {
     document.body.style.overflow = previousBodyOverflowRef.current;
   }, []);
 
+  // Focus management for the mobile menu: move focus in, trap Tab, close on Escape.
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const toggle = toggleRef.current;
+    if (toggle) toggle.focus();
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusables = menuPanelRef.current?.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isMenuOpen]);
+
   const scrollTo = (sectionId) => {
     setIsMenuOpen(false);
 
@@ -136,6 +170,7 @@ const Navbar = memo(function Navbar() {
       {/* ── Mobile Menu Toggle ── */}
       <div className="lg:hidden pointer-events-auto relative z-50">
         <button
+          ref={toggleRef}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
@@ -150,12 +185,17 @@ const Navbar = memo(function Navbar() {
       <GsapPresence>
         {isMenuOpen && (
           <Gsap.div
+            ref={menuPanelRef}
             id="mobile-navigation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.28 }}
             className={`fixed inset-0 z-40 pointer-events-auto lg:hidden backdrop-blur-md overflow-hidden ${isOnDarkSection ? 'bg-black/72' : 'bg-[#F5F4EF]/96'}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            tabIndex={-1}
           >
             <div className={`absolute inset-0 opacity-[0.1] pointer-events-none [background-size:28px_28px] ${isOnDarkSection ? '[background-image:linear-gradient(to_right,rgba(255,255,255,0.24)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.24)_1px,transparent_1px)]' : '[background-image:linear-gradient(to_right,rgba(0,0,0,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.16)_1px,transparent_1px)]'}`} />
             <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-lime-400/15 blur-3xl pointer-events-none" />
