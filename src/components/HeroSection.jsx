@@ -354,11 +354,12 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
 
           <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
             <h1 className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-black leading-[0.88]">
-              <TextReveal text="BRIAN" baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
-            </h1>
-
-            <h1 className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-transparent leading-[0.88] mt-2 sm:mt-0 font-outline-fallback">
-              <TextReveal text="PAMUNGKAS" baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
+              <span className="block">
+                <TextReveal text="BRIAN" baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
+              </span>
+              <span className="block mt-2 sm:mt-0 text-transparent font-outline-fallback">
+                <TextReveal text="PAMUNGKAS" baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
+              </span>
             </h1>
           </ParallaxTilt>
 
