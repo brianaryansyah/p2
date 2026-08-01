@@ -167,15 +167,29 @@ const ProfessionalExperience = () => {
           </aside>
 
           <div className="relative space-y-3 min-w-0 overflow-x-clip">
-            {experiences.map((experience, index) => (
-              <ExperienceItem
-                key={experience.company + experience.role}
-                experience={experience}
-                index={index}
-                isExpanded={expandedIndex === index}
-                onToggle={() => setExpandedIndex((current) => (current === index ? null : index))}
-              />
-            ))}
+            {experiences.length === 0 ? (
+              <div className="border border-dashed border-black/15 bg-white/60 rounded-[6px] px-6 py-12 flex flex-col items-center justify-center text-center">
+                <span className="w-8 h-8 rounded-full bg-lime-400/15 flex items-center justify-center mb-4">
+                  <Sparkles className="w-4 h-4 text-lime-600" />
+                </span>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40 mb-1.5">
+                  Timeline pending
+                </p>
+                <p className="text-sm font-light text-black/55 max-w-[300px] leading-6">
+                  Roles will appear here as soon as they are added.
+                </p>
+              </div>
+            ) : (
+              experiences.map((experience, index) => (
+                <ExperienceItem
+                  key={experience.company + experience.role}
+                  experience={experience}
+                  index={index}
+                  isExpanded={expandedIndex === index}
+                  onToggle={() => setExpandedIndex((current) => (current === index ? null : index))}
+                />
+              ))
+            )}
 
             <div className="pl-9 pt-2">
               <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/28 inline-flex items-center gap-1.5">

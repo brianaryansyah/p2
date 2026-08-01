@@ -300,93 +300,111 @@ export default function ProjectGallery({ onOpenProject }) {
         </div>
 
         {/* Project Counter */}
-        <div className="px-6 mb-6 flex items-center justify-between">
-          <span className="font-mono text-xs text-white/30 uppercase tracking-[0.16em]">
-            {String(activeProjectIndex + 1).padStart(2, '0')} / {String(projectCount).padStart(2, '0')}
-          </span>
-          <div className="flex gap-1.5">
-            {projects.map((_, i) => (
-              <div
-                key={i}
-                className={`h-1 rounded-full transition-all duration-300 ${i === activeProjectIndex ? 'w-6 bg-lime-400' : 'w-1.5 bg-white/20'}`}
-              />
-            ))}
+        {projectCount === 0 ? (
+          <div className="px-6">
+            <div className="border border-dashed border-white/15 rounded-lg px-6 py-14 flex flex-col items-center justify-center text-center">
+              <span className="w-9 h-9 rounded-full bg-lime-400/15 flex items-center justify-center mb-4">
+                <ArrowUpRight className="w-4 h-4 text-lime-400" />
+              </span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1.5">
+                No projects yet
+              </p>
+              <p className="text-sm text-neutral-400 max-w-[280px] leading-6">
+                Explorations will appear here once added.
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="px-6 mb-6 flex items-center justify-between">
+              <span className="font-mono text-xs text-white/30 uppercase tracking-[0.16em]">
+                {String(activeProjectIndex + 1).padStart(2, '0')} / {String(projectCount).padStart(2, '0')}
+              </span>
+              <div className="flex gap-1.5">
+                {projects.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-1 rounded-full transition-all duration-300 ${i === activeProjectIndex ? 'w-6 bg-lime-400' : 'w-1.5 bg-white/20'}`}
+                  />
+                ))}
+              </div>
+            </div>
 
-        {/* Horizontally scrollable card strip */}
-        <div
-          ref={mobileScrollRef}
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-6 scrollbar-hide [-webkit-overflow-scrolling:touch] [touch-action:pan-x] pb-4"
-        >
-          {projects.map((project, index) => (
-            <Gsap.button
-              type="button"
-              key={project.id}
-              id={`project-${project.id}`}
-              onClick={() => onOpenProject?.(project)}
-              aria-label={`View project ${project.title}`}
-              className="project-card group relative w-[80vw] shrink-0 snap-center overflow-hidden rounded-lg border border-white/10 bg-neutral-950 text-left cursor-pointer active:scale-[0.98] transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
-              data-project-index={index}
-              style={{ WebkitTapHighlightColor: 'transparent', aspectRatio: '3/4' }}
+            {/* Horizontally scrollable card strip */}
+            <div
+              ref={mobileScrollRef}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-6 scrollbar-hide [-webkit-overflow-scrolling:touch] [touch-action:pan-x] pb-4"
             >
-              {/* Image */}
-              <div className="absolute inset-0 overflow-hidden">
-                <picture>
-                  <source
-                    srcSet={[
-                      cloudinarySrc(project.img, 400) + ' 400w',
-                      cloudinarySrc(project.img, 800) + ' 800w',
-                    ].join(', ')}
-                    sizes="80vw"
-                  />
-                  <img
-                    draggable="false"
-                    src={cloudinarySrc(project.img, 800)}
-                    alt={project.title}
-                    width="800"
-                    height="1067"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    decoding="async"
-                    className="h-full w-full object-cover opacity-70 grayscale-[30%]"
-                    style={{ imageRendering: "auto" }}
-                  />
-                </picture>
-              </div>
+              {projects.map((project, index) => (
+                <Gsap.button
+                  type="button"
+                  key={project.id}
+                  id={`project-${project.id}`}
+                  onClick={() => onOpenProject?.(project)}
+                  aria-label={`View project ${project.title}`}
+                  className="project-card group relative w-[80vw] shrink-0 snap-center overflow-hidden rounded-lg border border-white/10 bg-neutral-950 text-left cursor-pointer active:scale-[0.98] transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
+                  data-project-index={index}
+                  style={{ WebkitTapHighlightColor: 'transparent', aspectRatio: '3/4' }}
+                >
+                  {/* Image */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <picture>
+                      <source
+                        srcSet={[
+                          cloudinarySrc(project.img, 400) + ' 400w',
+                          cloudinarySrc(project.img, 800) + ' 800w',
+                        ].join(', ')}
+                        sizes="80vw"
+                      />
+                      <img
+                        draggable="false"
+                        src={cloudinarySrc(project.img, 800)}
+                        alt={project.title}
+                        width="800"
+                        height="1067"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                        decoding="async"
+                        className="h-full w-full object-cover opacity-70 grayscale-[30%]"
+                        style={{ imageRendering: "auto" }}
+                      />
+                    </picture>
+                  </div>
 
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
-              {/* Number badge */}
-              <div className="absolute top-4 right-4 z-10">
-                <span className="font-mono text-3xl font-light text-white/15 tracking-wider">
-                  0{project.id}
-                </span>
-              </div>
+                  {/* Number badge */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <span className="font-mono text-3xl font-light text-white/15 tracking-wider">
+                      0{project.id}
+                    </span>
+                  </div>
 
-              {/* Category + Title */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-lime-400 shadow-[0_0_6px_rgba(163,230,53,0.8)]" />
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-white/70">
-                    {project.category}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-black uppercase text-white tracking-tight leading-[1.05]">
-                  {project.title}
-                </h3>
+                  {/* Category + Title */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-lime-400 shadow-[0_0_6px_rgba(163,230,53,0.8)]" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-white/70">
+                        {project.category}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-black uppercase text-white tracking-tight leading-[1.05]">
+                      {project.title}
+                    </h3>
 
-                {/* CTA arrow */}
-                <div className="mt-3 flex items-center gap-2 text-lime-400">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold">View Project</span>
-                  <ArrowUpRight size={14} strokeWidth={2.5} />
-                </div>
-              </div>
-            </Gsap.button>
-          ))}
-          <div className="shrink-0 w-2" />
-        </div>
+                    {/* CTA arrow */}
+                    <div className="mt-3 flex items-center gap-2 text-lime-400">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] font-bold">View Project</span>
+                      <ArrowUpRight size={14} strokeWidth={2.5} />
+                    </div>
+                  </div>
+                </Gsap.button>
+              ))}
+              <div className="shrink-0 w-2" />
+            </div>
+          </>
+        )}
       </section>
     );
   }
@@ -431,6 +449,28 @@ export default function ProjectGallery({ onOpenProject }) {
             </p>
             <ArrowUpRight className="text-lime-400 w-24 h-24 mt-8" />
           </Gsap.div>
+
+          {/* Empty State (shown until projects are added) */}
+          {projectCount === 0 && (
+            <Gsap.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="shrink-0 h-[70vh] w-[40vw] flex items-center justify-center"
+            >
+              <div className="border border-dashed border-white/15 rounded-[4px] px-8 py-14 flex flex-col items-center justify-center text-center max-w-xs">
+                <span className="w-10 h-10 rounded-full bg-lime-400/15 flex items-center justify-center mb-5">
+                  <ArrowUpRight className="w-5 h-5 text-lime-400" />
+                </span>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/40 mb-2">
+                  No projects yet
+                </p>
+                <p className="text-sm text-neutral-400 leading-6">
+                  Explorations will appear here once added.
+                </p>
+              </div>
+            </Gsap.div>
+          )}
 
           {/* Project Cards */}
           {projects.map((project, index) => (
