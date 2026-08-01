@@ -129,6 +129,14 @@ const AboutSection = memo(function AboutSection() {
   const { settings } = useSiteSettings();
   const profile = settings.profile;
 
+  const location = profile.location || 'Indonesia';
+  const profileName = profile.name || 'Brian Aryansyah Pamungkas';
+  const roleWords = (profile.role || 'Full-Stack Developer with Modern Web Focus').split(/\s+/).filter(Boolean);
+  const roleMid = Math.ceil(roleWords.length / 2);
+  const headlineLine1 = roleWords.slice(0, roleMid).join(' ');
+  const headlineLine2 = roleWords.slice(roleMid).join(' ');
+  const bioText = profile.bio || '';
+
   return (
     <section id="about-section" className="py-20 md:py-28 w-full relative bg-[#FAF9F6] overflow-hidden">
 
@@ -183,7 +191,7 @@ const AboutSection = memo(function AboutSection() {
                 {/* Name plate at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 px-5 pt-10 pb-4 bg-gradient-to-t from-black/65 via-black/30 to-transparent z-20">
                   <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-white/50 mb-0.5">Name</p>
-                  <p className="text-white font-bold text-[15px] tracking-wide leading-snug">{profile.name || 'Brian Pamungkas'}</p>
+                  <p className="text-white font-bold text-[15px] tracking-wide leading-snug">{profileName}</p>
                 </div>
 
                 {/* Corner brackets */}
@@ -207,7 +215,7 @@ const AboutSection = memo(function AboutSection() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-black/32 mb-1.5">Location</p>
                 <div className="flex items-center gap-1.5">
                   <MapPin size={11} className="text-black/38 shrink-0" />
-                  <span className="text-[13px] font-bold text-black">Indonesia</span>
+                  <span className="text-[13px] font-bold text-black">{location}</span>
                 </div>
               </div>
             </div>
@@ -238,18 +246,20 @@ const AboutSection = memo(function AboutSection() {
             >
               {/* Eyebrow */}
               <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-black/30 mb-5">
-                Based in Indonesia — Open to Work
+                Based in {location} — Open to Work
               </p>
 
               {/* Main title */}
               <h2 className="font-display font-bold tracking-[-0.025em] leading-[1.08] text-black">
                 <span className="block text-[44px] sm:text-[56px] lg:text-[64px] xl:text-[72px]">
-                  Full-Stack
+                  {headlineLine1}
                 </span>
 
-                <span className="block text-[22px] sm:text-[26px] lg:text-[30px] xl:text-[34px] font-medium tracking-[-0.01em] text-black/55 mt-2">
-                  Developer with Modern Web Focus
-                </span>
+                {headlineLine2 && (
+                  <span className="block text-[22px] sm:text-[26px] lg:text-[30px] xl:text-[34px] font-medium tracking-[-0.01em] text-black/55 mt-2">
+                    {headlineLine2}
+                  </span>
+                )}
               </h2>
             </Gsap.div>
 
@@ -275,12 +285,18 @@ const AboutSection = memo(function AboutSection() {
               transition={{ delay: 0.14, duration: 0.75, ease: 'easeOut' }}
               className="space-y-4 text-[15px] md:text-[15.5px] font-light text-black/60 leading-[1.88] max-w-[580px]"
             >
-              <p>
-                I'm <strong className="text-black font-semibold">Brian Aryansyah Pamungkas</strong>, a Full-Stack Developer focused on building modern web experiences that are not only beautiful, but performant, accessible, and production-ready.
-              </p>
-              <p>
-                I specialize in building complete web applications from concept to deployment, with a strong focus on UI/UX, performance optimization, and clean code architecture.
-              </p>
+              {bioText ? (
+                <p>{bioText}</p>
+              ) : (
+                <>
+                  <p>
+                    I'm <strong className="text-black font-semibold">{profileName}</strong>, a {profile.role || 'Full-Stack Developer'} focused on building modern web experiences that are not only beautiful, but performant, accessible, and production-ready.
+                  </p>
+                  <p>
+                    I specialize in building complete web applications from concept to deployment, with a strong focus on UI/UX, performance optimization, and clean code architecture.
+                  </p>
+                </>
+              )}
             </Gsap.div>
 
             {/* Divider */}

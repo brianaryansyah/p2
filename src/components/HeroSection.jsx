@@ -2,6 +2,7 @@ import { memo, useRef, useState, useEffect } from 'react';
 import { Gsap, useGsapReducedMotion, useGsapScroll, useGsapTransform } from '../utils/gsapAnimate';
 import { Terminal, Code2, Database, Cpu, Download, ArrowUpRight } from 'lucide-react';
 import HeroNetwork from './HeroNetwork';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { exponentialEaseOut } from '../utils/easing';
 
 // Shared Intl formatter — created once, reused on every tick
@@ -15,7 +16,7 @@ const jakartaFormatter = new Intl.DateTimeFormat('en-US', {
 
 // === LOCATION & TIME BADGE ===
 // Uses direct DOM update via ref to avoid React re-renders every second
-const LocationTimeBadge = () => {
+const LocationTimeBadge = ({ location = 'Indonesia' }) => {
   const timeRef = useRef(null);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const LocationTimeBadge = () => {
   return (
     <div className="flex items-center justify-center gap-3 sm:gap-5 font-mono text-xs uppercase tracking-[0.15em] text-black/50">
       <div className="flex items-center gap-2">
-        <span className="font-bold text-black/70">Based in Indonesia</span>
+        <span className="font-bold text-black/70">Based in {location}</span>
       </div>
       <div className="w-[1px] h-3 bg-black/15" />
       <div className="flex items-center gap-1.5 tabular-nums">
@@ -179,6 +180,13 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
   const reduceMotion = useGsapReducedMotion();
   const [enableParallax, setEnableParallax] = useState(false);
   const [enableAmbientMotion, setEnableAmbientMotion] = useState(false);
+  const { settings } = useSiteSettings();
+  const profile = settings.profile;
+  const profileName = profile.name || 'Brian Pamungkas';
+  const nameWords = profileName.trim().split(/\s+/).filter(Boolean);
+  const heroNameLine1 = (nameWords[0] || '').toUpperCase();
+  const heroNameLine2 = nameWords.slice(1).join(' ').toUpperCase();
+  const heroTagline = profile.role || 'Full-Stack Developer & AI Enthusiast specializing in performant, accessible digital products.';
 
   const { scrollYProgress } = useGsapScroll({
     target: containerRef,
@@ -343,7 +351,7 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           transition={{ delay: 0.55, duration: 0.8 }}
           className="mb-3 md:mb-4"
         >
-          <LocationTimeBadge />
+          <LocationTimeBadge location={profile.location || 'Indonesia'} />
         </Gsap.div>
 
         {/* 2. Massive Clear Typography with Interactive Effects */}
@@ -355,11 +363,13 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
             <h1 className="text-[clamp(4.25rem,14vw,9rem)] font-black uppercase tracking-tight text-black leading-[0.88]">
               <span className="block">
-                <TextReveal text="BRIAN" baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
+                <TextReveal text={heroNameLine1} baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
               </span>
-              <span className="block mt-2 sm:mt-0 text-transparent font-outline-fallback">
-                <TextReveal text="PAMUNGKAS" baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
-              </span>
+              {heroNameLine2 && (
+                <span className="block mt-2 sm:mt-0 text-transparent font-outline-fallback">
+                  <TextReveal text={heroNameLine2} baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
+                </span>
+              )}
             </h1>
           </ParallaxTilt>
 
@@ -385,7 +395,7 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
             >.</Gsap.span>
           </h2>
           <p className="font-sans text-base text-black/60 max-w-xl leading-7 mt-2 px-4">
-            <WordReveal text="Full-Stack Developer & AI Enthusiast specializing in performant, accessible digital products." baseDelay={0.75} stagger={0.03} isRevealed={isRevealed} />
+            <WordReveal text={heroTagline} baseDelay={0.75} stagger={0.03} isRevealed={isRevealed} />
           </p>
         </Gsap.div>
 
