@@ -5,7 +5,7 @@
 :root {
   --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'Space Grotesk', Menlo, Monaco, Consolas, monospace;
+  --font-mono: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
 }
 
 body {
@@ -115,12 +115,13 @@ h3 {
   text-wrap: balance;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-::-webkit-scrollbar {
+/* Lenis replaces the native page scroll, so hide only the main document
+   scrollbar and keep scrollbars visible inside nested overflow regions. */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 html,
 body {
   font-family: var(--font-sans);
@@ -129,6 +130,39 @@ body {
   scrollbar-width: none;
   /* Firefox */
   overscroll-behavior: none;
+}
+
+/* Decorative horizontal strips: hide scrollbar on purpose */
+.scrollbar-hide::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide,
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Thin styled scrollbar for scrollable content regions (e.g. chat log) */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(64 64 64) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  display: block;
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(64 64 64);
+  border-radius: 9999px;
 }
 
 /* Custom Text Selection Color */
