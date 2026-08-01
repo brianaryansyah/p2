@@ -40,14 +40,16 @@ const CAPABILITIES = [
 const AchievementCard = ({ achievement, index, onClick }) => {
   const Icon = achievement.icon;
   return (
-    <Gsap.div
+    <Gsap.button
+      type="button"
       onClick={onClick}
+      aria-label={`Open details for ${achievement.title}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: 0.12 + index * 0.1, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -2 }}
-      className="group relative cursor-pointer rounded-[8px] overflow-hidden border border-black/[0.08] bg-[#FFFEFC] shadow-[0_4px_14px_rgba(0,0,0,0.03)] hover:border-black/14 hover:shadow-[0_10px_28px_rgba(0,0,0,0.06)] transition-all duration-300"
+      className="group relative w-full text-left cursor-pointer rounded-[8px] overflow-hidden border border-black/[0.08] bg-[#FFFEFC] shadow-[0_4px_14px_rgba(0,0,0,0.03)] hover:border-black/14 hover:shadow-[0_10px_28px_rgba(0,0,0,0.06)] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-500"
     >
       <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-lime-300/[0.16] blur-3xl opacity-35 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-br from-lime-200/[0.08] via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -115,7 +117,7 @@ const AchievementCard = ({ achievement, index, onClick }) => {
           </div>
         </div>
       </div>
-    </Gsap.div>
+    </Gsap.button>
   );
 };
 
