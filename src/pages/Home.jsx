@@ -62,6 +62,9 @@ export default function Home() {
 
   return (
     <div className="bg-[#FAF9F6] text-black selection:bg-lime-400 selection:text-black relative">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       {isLoading && (
         <Preloader
           onComplete={() => {
@@ -78,20 +81,22 @@ export default function Home() {
 
       <Cursor />
       <Navbar />
-      <HeroSection isRevealed={true} />
-      <Suspense fallback={null}><MarqueeBanner /></Suspense>
-      <Suspense fallback={null}><AboutSection /></Suspense>
+      <main id="main-content">
+        <HeroSection isRevealed={true} />
+        <Suspense fallback={null}><MarqueeBanner /></Suspense>
+        <Suspense fallback={null}><AboutSection /></Suspense>
 
-      <div id="project-section" ref={galleryRef} className="bg-neutral-900">
-        <Suspense fallback={<div className="h-screen bg-neutral-900" />}>
-          <ProjectGallery onOpenProject={handleOpenProject} />
-        </Suspense>
-      </div>
+        <div id="project-section" ref={galleryRef} className="bg-neutral-900">
+          <Suspense fallback={<div className="h-screen bg-neutral-900" />}>
+            <ProjectGallery onOpenProject={handleOpenProject} />
+          </Suspense>
+        </div>
 
-      <Suspense fallback={null}><ProfessionalExperience /></Suspense>
-      <Suspense fallback={null}><TechStack /></Suspense>
-      <Suspense fallback={null}><GitHubStats /></Suspense>
-      <Suspense fallback={null}><TechnicalCapabilities /></Suspense>
+        <Suspense fallback={null}><ProfessionalExperience /></Suspense>
+        <Suspense fallback={null}><TechStack /></Suspense>
+        <Suspense fallback={null}><GitHubStats /></Suspense>
+        <Suspense fallback={null}><TechnicalCapabilities /></Suspense>
+      </main>
       <Suspense fallback={null}><Footer /></Suspense>
     </div>
   );
