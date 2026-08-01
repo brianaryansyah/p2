@@ -295,6 +295,17 @@ html.lenis body {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @keyframes hero-pulse-ring {
   0%, 100% {
     transform: translate3d(-50%, -50%, 0) scale(1);
