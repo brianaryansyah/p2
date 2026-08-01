@@ -44,6 +44,12 @@ const MarqueeRow = memo(function MarqueeRow({ skills, dark, direction, baseSpeed
     const track = trackRef.current;
     if (!row || !track) return undefined;
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      // Render a static strip instead of running the rAF loop.
+      return undefined;
+    }
+
     let pos = 0;
     let raf = 0;
     let timer = 0;
@@ -132,11 +138,21 @@ const MarqueeBanner = memo(function MarqueeBanner() {
     pausedRef.current = paused;
   }, [paused]);
 
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduceMotion(media.matches);
+    const onChange = () => setReduceMotion(media.matches);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
   return (
     <div className="relative z-20 sm:-rotate-[0.8deg] sm:scale-[1.02] cursor-default select-none">
       <div className="bg-black shadow-[0_0_40px_rgba(163,230,53,0.08)]">
 
         {/* Floating control chip */}
+        {!reduceMotion && (
         <button
           onClick={() => setPaused((p) => !p)}
           aria-label={paused ? 'Resume scrolling' : 'Pause scrolling'}
@@ -145,6 +161,7 @@ const MarqueeBanner = memo(function MarqueeBanner() {
           {paused ? <Play size={11} /> : <Pause size={11} />}
           {paused ? 'Play' : 'Pause'}
         </button>
+        )}
 
         {/* ── Row 1: Solid Lime Text, scrolling left ── */}
         <div className="py-4 md:py-6 border-b border-neutral-800/60">

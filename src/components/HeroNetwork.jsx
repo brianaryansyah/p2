@@ -179,20 +179,29 @@ const HeroNetwork = ({ className = '' }) => {
       }
     };
 
+    const onResize = () => {
+      resize();
+      if (reducedMotion) {
+        running = false;
+        step();
+      }
+    };
+
     resize();
-    window.addEventListener('resize', resize);
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerleave', onPointerLeave, { passive: true });
+    window.addEventListener('resize', onResize);
 
     if (reducedMotion) {
+      // Draw a single static frame and never schedule further animation.
+      running = false;
       step();
       return () => {
         cancelAnimationFrame(rafId);
-        window.removeEventListener('resize', resize);
-        window.removeEventListener('pointermove', onPointerMove);
-        window.removeEventListener('pointerleave', onPointerLeave);
+        window.removeEventListener('resize', onResize);
       };
     }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerleave', onPointerLeave, { passive: true });
 
     const packetTimer = setInterval(spawnPacket, PACKET_SPAWN_INTERVAL);
     rafId = requestAnimationFrame(step);
@@ -202,7 +211,7 @@ const HeroNetwork = ({ className = '' }) => {
       running = false;
       cancelAnimationFrame(rafId);
       clearInterval(packetTimer);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibilityChange);
