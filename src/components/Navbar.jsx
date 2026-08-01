@@ -138,7 +138,9 @@ const Navbar = memo(function Navbar() {
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          className={`w-11 h-11 flex items-center justify-center rounded-full backdrop-blur-md border transition-all duration-300 ${isMenuOpen ? 'bg-white/85 border-black/10 text-black shadow-[0_8px_24px_rgba(0,0,0,0.08)]' : isOnDarkSection ? 'bg-black/25 border-white/25 text-white shadow-[0_8px_24px_rgba(0,0,0,0.22)]' : scrolled ? 'bg-white/85 border-black/10 text-black shadow-[0_8px_24px_rgba(0,0,0,0.08)]' : 'bg-[#FAF9F6]/70 border-black/10 text-black'}`}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-navigation"
+          className={`w-11 h-11 flex items-center justify-center rounded-full backdrop-blur-md border transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400 ${isMenuOpen ? 'bg-white/85 border-black/10 text-black shadow-[0_8px_24px_rgba(0,0,0,0.08)]' : isOnDarkSection ? 'bg-black/25 border-white/25 text-white shadow-[0_8px_24px_rgba(0,0,0,0.22)]' : scrolled ? 'bg-white/85 border-black/10 text-black shadow-[0_8px_24px_rgba(0,0,0,0.08)]' : 'bg-[#FAF9F6]/70 border-black/10 text-black'}`}
         >
           {isMenuOpen ? <X size={20} strokeWidth={2} /> : <Menu size={20} strokeWidth={2} />}
         </button>
@@ -148,6 +150,7 @@ const Navbar = memo(function Navbar() {
       <GsapPresence>
         {isMenuOpen && (
           <Gsap.div
+            id="mobile-navigation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -182,7 +185,7 @@ const Navbar = memo(function Navbar() {
                     initial={{ opacity: 0, x: -14 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.28, delay: 0.05 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                    className={`w-full border-b last:border-b-0 py-4 flex items-center justify-between text-left active:translate-x-0.5 transition-transform ${isOnDarkSection ? 'border-white/20 active:bg-white/5' : 'border-black/15 active:bg-black/5'}`}
+                    className={`w-full border-b last:border-b-0 py-4 flex items-center justify-between text-left active:translate-x-0.5 transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-lime-400 ${isOnDarkSection ? 'border-white/20 active:bg-white/5' : 'border-black/15 active:bg-black/5'}`}
                   >
                     <div className="flex items-center gap-4">
                       <span className={`text-[11px] font-mono font-bold tracking-[0.14em] ${isOnDarkSection ? 'text-white/50' : 'text-black/35'}`}>{String(i + 1).padStart(2, '0')}</span>
@@ -224,7 +227,7 @@ const Navbar = memo(function Navbar() {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => scrollTo(item.sectionId)}
-                className={`relative px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.12em] md:tracking-[0.16em] transition-colors ${isOnDarkSection ? 'text-white/60 hover:text-white' : 'text-black/60 hover:text-black'}`}
+                className={`relative px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.12em] md:tracking-[0.16em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400 ${isOnDarkSection ? 'text-white/60 hover:text-white' : 'text-black/60 hover:text-black'}`}
               >
                 <span className="relative z-10">{item.label}</span>
                 {hoveredIndex === index && (
@@ -245,7 +248,7 @@ const Navbar = memo(function Navbar() {
         <Magnetic>
           <button
             onClick={() => scrollTo('contact-section')}
-            className={`group relative overflow-hidden flex items-center gap-3 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.12em] md:tracking-[0.16em] hover:shadow-[0_0_30px_rgba(163,230,53,0.3)] transition-all duration-500 ${isOnDarkSection ? 'bg-white text-black' : 'bg-black text-white'}`}
+            className={`group relative overflow-hidden flex items-center gap-3 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.12em] md:tracking-[0.16em] hover:shadow-[0_0_30px_rgba(163,230,53,0.3)] transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400 ${isOnDarkSection ? 'bg-white text-black' : 'bg-black text-white'}`}
           >
             {/* Core Label */}
             <span className="relative z-10 pl-2">Let's Talk</span>
