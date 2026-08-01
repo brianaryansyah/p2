@@ -19,7 +19,7 @@ const LEVEL_COLORS = {
 
 const LOADING_COLOR = '#1a1a1a';
 
-const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading }) {
+const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading, error }) {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -53,7 +53,7 @@ const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading }) {
             const x = col * (cellSize + gap);
             const y = row * (cellSize + gap);
 
-            if (loading) {
+            if (loading || error) {
                 ctx.fillStyle = LOADING_COLOR;
             } else {
                 const day = data[i];
@@ -62,7 +62,7 @@ const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading }) {
 
             ctx.fillRect(x, y, cellSize, cellSize);
         }
-    }, [data, loading]);
+    }, [data, loading, error]);
 
     useEffect(() => {
         draw();
@@ -88,7 +88,12 @@ const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading }) {
             <canvas
                 ref={canvasRef}
                 className="w-full"
-                aria-label={`GitHub contribution heatmap showing ${HEATMAP_DAYS} days of activity`}
+                role="img"
+                aria-label={
+                    error
+                        ? 'GitHub contribution heatmap unavailable'
+                        : `GitHub contribution heatmap showing ${HEATMAP_DAYS} days of activity`
+                }
             />
         </div>
     );
@@ -99,6 +104,7 @@ const GitHubStats = memo(function GitHubStats() {
     const [contributionData, setContributionData] = useState([]);
     const [totalContributions, setTotalContributions] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -112,6 +118,14 @@ const GitHubStats = memo(function GitHubStats() {
                 ]);
 
                 if (isCancelled) return;
+
+                if (!userRes.ok || !contribRes.ok) {
+                    if (!isCancelled) {
+                        setError(true);
+                        setLoading(false);
+                    }
+                    return;
+                }
 
                 const userJson = await userRes.json();
                 if (isCancelled) return;
@@ -130,7 +144,10 @@ const GitHubStats = memo(function GitHubStats() {
                 setLoading(false);
             } catch (error) {
                 if (error?.name === 'AbortError') return;
-                setLoading(false);
+                if (!isCancelled) {
+                    setError(true);
+                    setLoading(false);
+                }
             }
         };
 
@@ -221,7 +238,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '-' : String(userData?.public_repos ?? 0).padStart(2, '0')}
+                                    {loading ? '-' : error ? '--' : String(userData?.public_repos ?? 0).padStart(2, '0')}
                                 </p>
                             </div>
                         </div>
@@ -234,7 +251,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '...' : (totalContributions > 999 ? `${(totalContributions / 1000).toFixed(1)}k` : totalContributions)}
+                                    {loading ? '...' : error ? '--' : (totalContributions > 999 ? `${(totalContributions / 1000).toFixed(1)}k` : totalContributions)}
                                 </p>
                             </div>
                         </div>
@@ -247,7 +264,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '-' : String(userData?.followers ?? 0).padStart(2, '0')}
+                                    {loading ? '-' : error ? '--' : String(userData?.followers ?? 0).padStart(2, '0')}
                                 </p>
                             </div>
                         </div>
@@ -260,7 +277,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '-' : (userData?.created_at ? new Date(userData.created_at).getFullYear() : '----')}
+                                    {loading ? '-' : error ? '----' : (userData?.created_at ? new Date(userData.created_at).getFullYear() : '----')}
                                 </p>
                             </div>
                         </div>
@@ -291,7 +308,7 @@ const GitHubStats = memo(function GitHubStats() {
                         </div>
 
                         <div className="w-full flex-1 flex flex-col justify-center">
-                            <HeatmapCanvas data={contributionData} loading={loading} />
+                            <HeatmapCanvas data={contributionData} loading={loading} error={error} />
                         </div>
 
                         <div className="mt-8 pt-6 border-t border-white/10 flex justify-between items-center font-mono text-xs md:text-sm text-white/40">
@@ -299,9 +316,15 @@ const GitHubStats = memo(function GitHubStats() {
                                 <span className="text-lime-500 mr-2">$</span>
                                 user_query --status
                             </div>
-                            <div className="uppercase tracking-[0.12em] md:tracking-[0.16em] text-lime-400/80 animate-pulse">
-                                ONLINE
-                            </div>
+                            {error ? (
+                                <div className="uppercase tracking-[0.12em] md:tracking-[0.16em] text-red-400/80">
+                                    UNAVAILABLE
+                                </div>
+                            ) : (
+                                <div className="uppercase tracking-[0.12em] md:tracking-[0.16em] text-lime-400/80 animate-pulse">
+                                    ONLINE
+                                </div>
+                            )}
                         </div>
                     </Gsap.div>
 
