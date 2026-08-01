@@ -1,4 +1,3 @@
-import { PROJECT_META } from './projectMeta';
 import { PORTFOLIO_DATA } from './portfolioData';
 
 // ─── Reactive Content Store ──────────────────────────────────────
@@ -10,72 +9,12 @@ import { PORTFOLIO_DATA } from './portfolioData';
 
 export const PORTFOLIO_CONTENT_STORAGE_KEY = 'portfolio_content_v1';
 
-// Base defaults mirror the current hardcoded site content.
+// Base defaults mirror the current hardcoded site content. Collection
+// sections (projects, experience, achievements) start empty so the owner can
+// populate them through the /admin panel.
 const BASE = {
-  projects: PROJECT_META.map((m) => ({
-    ...m,
-    description: PORTFOLIO_DATA.projects.find((p) => p.slug === m.slug)?.description || '',
-  })),
-  experience: [
-    {
-      company: 'GDSC Udinus',
-      role: 'Developer Community',
-      period: 'Nov 2023 - Nov 2025',
-      impact: 'Contributed to 5+ technical discussions across 4 collaborative projects.',
-      stack: ['Community', 'Workshops', 'Collaboration'],
-      description: [
-        'Actively participated in workshops, technical events, and collaborative learning sessions.',
-        'Contributed insights around development and analytics in community-driven projects.',
-      ],
-    },
-    {
-      company: 'Blockvizo',
-      role: 'Data Analyst',
-      period: 'Jun 2024 - Jul 2025',
-      impact: 'Improved forecasting accuracy by 35% and cut analysis time by 40%.',
-      stack: ['Data Analysis', 'Dashboards', 'Web3 Analytics', 'Predictive Modeling'],
-      description: [
-        'Processed 50,000+ game hash history records to model item-drop probability behavior.',
-        'Built actionable dashboards for decentralized projects, enabling faster and more confident decisions.',
-        'Specialized in predictive airdrop and winning probability analysis across 10+ Web3 ecosystems.',
-      ],
-    },
-    {
-      company: 'ASAH (led by Dicoding x Accenture)',
-      role: 'Machine Learning Cohort',
-      period: 'Aug 2025 - Jan 2026',
-      impact: 'Served as project manager during the capstone phase and improved team execution by 70%.',
-      stack: ['Project Leadership', 'ML Product', 'React', 'Stakeholder Sync'],
-      description: [
-        'Acted as project manager during capstone, leading a cross-functional team of 5 machine learning engineers and React developers.',
-        'Managed the development of a banking sales prediction portal to prioritize high-probability leads and reduce low-value outreach.',
-        'Coordinated timelines and technical workflows across functions to improve delivery speed and reliability.',
-      ],
-    },
-    {
-      company: 'Programming Lab',
-      role: 'Lab Assistant',
-      period: 'Aug 2025 - Present',
-      impact: 'Mentored 110+ junior students through practical engineering sessions.',
-      stack: ['Teaching', 'Mentorship', 'Software Fundamentals'],
-      description: [
-        'Assisted in 3+ weekly academic lab sessions for programming and software engineering courses.',
-        'Mentored around 110 junior students in problem solving, practical exercises, and core programming concepts.',
-      ],
-    },
-    {
-      company: 'PIJAK (led by Dicoding x IBM)',
-      role: 'AI Engineer Cohort',
-      period: 'Jan 2026 - Present',
-      impact: 'Selected participant in the PIJAK AI Engineer cohort.',
-      stack: ['Python', 'Generative AI', 'Deep Learning', 'AI Ethics'],
-      description: [
-        'Joined an intensive AI Engineer cohort focused on Generative AI, Deep Learning, and AI Ethics.',
-        'Developing advanced AI solutions with Python and industry-standard practices from the IBM SkillsBuild curriculum.',
-        'Building capstone-ready systems for real-world AI implementation challenges.',
-      ],
-    },
-  ],
+  projects: [],
+  experience: [],
   techStack: [
     {
       title: 'AI & Machine Learning',
@@ -139,7 +78,7 @@ const BASE = {
     { title: 'Data Analysis', desc: 'Advanced statistical modeling, big data wrangling, and actionable visualizations.' },
     { title: 'Web Engineering', desc: 'Scalable full-stack systems with ultra-responsive, accessible interfaces.' },
   ],
-  achievements: PORTFOLIO_DATA.achievements || [],
+  achievements: [],
   profile: PORTFOLIO_DATA.profile,
 };
 
