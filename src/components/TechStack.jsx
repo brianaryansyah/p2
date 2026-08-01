@@ -140,24 +140,25 @@ const TechStack = () => {
                                     </span>
                                 </div>
 
-                                <div className="md:w-2/3 flex flex-wrap gap-4 lg:gap-5 items-center">
+                                <ul className="md:w-2/3 flex flex-wrap gap-4 lg:gap-5 items-center list-none">
                                     {category.skills.map((skill, idx) => {
                                         const IconComponent = ICON_BY_NAME[skill.name] || Code2;
                                         return (
-                                            <div
+                                            <li
                                                 key={idx}
-                                                className="relative group/icon w-11 h-11 md:w-12 md:h-12 flex items-center justify-center border border-white/10 rounded-lg hover:border-lime-400/50 hover:bg-lime-400/10 transition-all duration-300 cursor-default"
-                                                title={skill.name}
+                                                className="relative group/icon w-11 h-11 md:w-12 md:h-12 flex items-center justify-center border border-white/10 rounded-lg hover:border-lime-400/50 hover:bg-lime-400/10 transition-all duration-300 cursor-default focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-400"
+                                                aria-label={skill.name}
+                                                tabIndex={0}
                                             >
-                                                <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-white/60 group-hover:text-white/80 group-hover/icon:text-lime-400 transition-colors" />
+                                                <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-white/60 group-hover:text-white/80 group-hover/icon:text-lime-400 transition-colors" aria-hidden="true" />
                                                 {/* Tooltip */}
-                                                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-white text-black text-[10px] font-mono font-bold uppercase tracking-wider rounded whitespace-nowrap opacity-0 group-hover/icon:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                                                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-white text-black text-[10px] font-mono font-bold uppercase tracking-wider rounded whitespace-nowrap opacity-0 group-hover/icon:opacity-100 group-focus/icon:opacity-100 focus-within:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
                                                     {skill.name}
                                                 </span>
-                                            </div>
+                                            </li>
                                         );
                                     })}
-                                </div>
+                                </ul>
                             </Gsap.div>
                         ))}
                     </div>
