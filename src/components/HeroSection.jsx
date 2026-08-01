@@ -2,6 +2,7 @@ import { memo, useRef, useState, useEffect } from 'react';
 import { Gsap, useGsapReducedMotion, useGsapScroll, useGsapTransform } from '../utils/gsapAnimate';
 import { Terminal, Code2, Database, Cpu, Download, ArrowUpRight } from 'lucide-react';
 import HeroNetwork from './HeroNetwork';
+import { exponentialEaseOut } from '../utils/easing';
 
 // Shared Intl formatter — created once, reused on every tick
 const jakartaFormatter = new Intl.DateTimeFormat('en-US', {
@@ -218,6 +219,22 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
     };
   }, [reduceMotion]);
 
+  const scrollToProjects = () => {
+    const target = document.getElementById('project-section');
+    if (!target) return;
+
+    if (!reduceMotion && window.lenisInstance && typeof window.lenisInstance.scrollTo === 'function') {
+      window.lenisInstance.scrollTo(target, {
+        offset: -24,
+        duration: 1.35,
+        easing: exponentialEaseOut,
+      });
+      return;
+    }
+
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  };
+
   return (
     <header
       ref={containerRef}
@@ -379,15 +396,16 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           className="flex flex-wrap items-center justify-center gap-4 mt-5"
         >
           <button
-            onClick={() => document.getElementById('project-section')?.scrollIntoView({ behavior: 'smooth' })}
-            className="group flex items-center gap-2 bg-black text-white px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider hover:bg-lime-400 hover:text-black transition-all duration-300 cursor-pointer"
+            type="button"
+            onClick={scrollToProjects}
+            className="group flex items-center gap-2 bg-black text-white px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider hover:bg-lime-400 hover:text-black transition-all duration-300 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-500"
           >
             View Projects <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
           <a
             href="/cv.pdf"
             download
-            className="group flex items-center gap-2 bg-transparent text-black border-2 border-black px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider hover:bg-black hover:text-lime-400 transition-all duration-300"
+            className="group flex items-center gap-2 bg-transparent text-black border-2 border-black px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider hover:bg-black hover:text-lime-400 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-500"
           >
             Download CV <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
           </a>
