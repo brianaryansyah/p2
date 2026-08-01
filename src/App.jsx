@@ -2,6 +2,7 @@ import { lazy, Suspense, useLayoutEffect } from "react";
 import { Routes, Route, useLocation, useNavigationType } from "react-router-dom";
 import Home from "./pages/Home";
 import ProjectDetailModal from "./components/projects/ProjectDetailModal";
+import ProjectDetailRouter from "./components/projects/ProjectDetailRouter";
 
 const Admin = lazy(() => import("./pages/Admin"));
 
@@ -108,6 +109,7 @@ export default function App() {
       <ScrollToTop />
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home />} />
+        <Route path="/projects/:slug" element={<ProjectDetailRouter mode="page" />} />
         <Route
           path="/admin"
           element={(
