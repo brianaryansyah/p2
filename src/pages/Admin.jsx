@@ -164,6 +164,11 @@ const ContentTab = ({ data, updateSection }) => {
         ))}
       </div>
 
+      <p className="flex items-center gap-1.5 text-[11px] text-black/40">
+        <span className="w-1.5 h-1.5 rounded-full bg-lime-500 shrink-0" />
+        Edits here apply live as you add, change, or remove entries.
+      </p>
+
       {section === 'projects' && (
         <CollectionEditor
           title="Projects"
@@ -236,9 +241,12 @@ const Admin = () => {
   const [tab, setTab] = useState('photo');
   const [saved, setSaved] = useState('');
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [profileDraft, setProfileDraft] = useState(null);
 
   const photo = settings?.photo?.dataUrl;
   const profile = settings?.profile;
+  const activeProfile = profileDraft || profile;
+  const dirtyProfile = profileDraft !== null;
 
   const unlock = (e) => {
     e.preventDefault();
@@ -281,14 +289,24 @@ const Admin = () => {
     flash('Photo removed — anonymous placeholder restored');
   };
 
-  const updateProfileField = (key, value) => {
-    const patch = { profile: { ...profile, [key]: value } };
-    if (key === 'github') patch.profile.socials = { ...profile.socials, github: value };
-    if (key === 'linkedin') patch.profile.socials = { ...profile.socials, linkedin: value };
-    update(patch);
+  const updateDraftField = (key, value) => {
+    const next = { ...activeProfile, [key]: value };
+    if (key === 'github') next.socials = { ...activeProfile.socials, github: value };
+    if (key === 'linkedin') next.socials = { ...activeProfile.socials, linkedin: value };
+    setProfileDraft(next);
   };
 
-  const saveProfile = () => flash('Profile saved');
+  const saveProfile = () => {
+    if (!profileDraft) return;
+    update({ profile: profileDraft });
+    setProfileDraft(null);
+    flash('Profile saved — public site updated');
+  };
+
+  const discardProfile = () => {
+    setProfileDraft(null);
+    flash('Changes discarded');
+  };
 
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
@@ -422,6 +440,12 @@ const Admin = () => {
           </div>
         )}
 
+        <p className="mb-6 flex items-center gap-2 text-[11px] text-black/40 leading-5">
+          <span className="w-1.5 h-1.5 rounded-full bg-lime-500 shrink-0" />
+          Every change applies instantly to the public site and syncs live across tabs on this device —
+          no refresh needed.
+        </p>
+
         <div className="flex items-center gap-1 border-b border-black/10 mb-8 pb-px">
           {TABS.map((t) => {
             const Icon = t.icon;
@@ -443,7 +467,7 @@ const Admin = () => {
             <div className="bg-white border border-black/10 rounded-lg p-6 shadow-sm">
               <h2 className="font-bold text-lg mb-1">Profile photo</h2>
               <p className="text-sm text-black/50 mb-5">
-                Upload a new photo to replace the anonymous placeholder. Images are compressed to 1200px WebP and stored locally.
+                Upload a new photo to replace the anonymous placeholder. Images are compressed to 1200px WebP and stored locally. Press <span className="font-semibold">Save photo</span> to apply it to the public site instantly.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6">
@@ -487,43 +511,54 @@ const Admin = () => {
           <div className="bg-white border border-black/10 rounded-lg p-6 shadow-sm">
             <h2 className="font-bold text-lg mb-1">Identity & bio</h2>
             <p className="text-sm text-black/50 mb-6">
-              These values feed the site and the AI assistant context.
+              These values feed the site and the AI assistant context. Changes apply the moment you hit Save.
             </p>
 
             <div className="grid sm:grid-cols-2 gap-5">
               <Field label="Full name">
-                <input className={inputClassMemo} value={profile?.name || ''} onChange={(e) => updateProfileField('name', e.target.value)} />
+                <input className={inputClassMemo} value={activeProfile?.name || ''} onChange={(e) => updateDraftField('name', e.target.value)} />
               </Field>
               <Field label="Role">
-                <input className={inputClassMemo} value={profile?.role || ''} onChange={(e) => updateProfileField('role', e.target.value)} />
+                <input className={inputClassMemo} value={activeProfile?.role || ''} onChange={(e) => updateDraftField('role', e.target.value)} />
               </Field>
               <Field label="Location">
-                <input className={inputClassMemo} value={profile?.location || ''} onChange={(e) => updateProfileField('location', e.target.value)} />
+                <input className={inputClassMemo} value={activeProfile?.location || ''} onChange={(e) => updateDraftField('location', e.target.value)} />
               </Field>
               <Field label="Email">
-                <input className={inputClassMemo} type="email" value={profile?.email || ''} onChange={(e) => updateProfileField('email', e.target.value)} />
+                <input className={inputClassMemo} type="email" value={activeProfile?.email || ''} onChange={(e) => updateDraftField('email', e.target.value)} />
               </Field>
               <Field label="GitHub URL">
-                <input className={inputClassMemo} value={profile?.socials?.github || ''} onChange={(e) => updateProfileField('github', e.target.value)} />
+                <input className={inputClassMemo} value={activeProfile?.socials?.github || ''} onChange={(e) => updateDraftField('github', e.target.value)} />
               </Field>
               <Field label="LinkedIn URL">
-                <input className={inputClassMemo} value={profile?.socials?.linkedin || ''} onChange={(e) => updateProfileField('linkedin', e.target.value)} />
+                <input className={inputClassMemo} value={activeProfile?.socials?.linkedin || ''} onChange={(e) => updateDraftField('linkedin', e.target.value)} />
               </Field>
               <div className="sm:col-span-2">
                 <Field label="Short bio">
                   <textarea
                     className={`${inputClassMemo} resize-y min-h-[110px]`}
-                    value={profile?.bio || ''}
-                    onChange={(e) => updateProfileField('bio', e.target.value)}
+                    value={activeProfile?.bio || ''}
+                    onChange={(e) => updateDraftField('bio', e.target.value)}
                   />
                 </Field>
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end">
-              <button onClick={saveProfile} className={`${btnBase} bg-black text-white hover:bg-lime-500 hover:text-black`}>
-                <Save size={14} /> Save profile
-              </button>
+            <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-black/10 pt-4">
+              <span className={`flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] ${dirtyProfile ? 'text-amber-600' : 'text-black/35'}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${dirtyProfile ? 'bg-amber-500 animate-pulse' : 'bg-lime-500'}`} />
+                {dirtyProfile ? 'Unsaved changes' : 'All changes saved'}
+              </span>
+              <div className="flex gap-2">
+                {dirtyProfile && (
+                  <button onClick={discardProfile} className={`${btnBase} bg-white border border-black/20 hover:bg-black hover:text-white`}>
+                    <RotateCcw size={14} /> Discard
+                  </button>
+                )}
+                <button onClick={saveProfile} disabled={!dirtyProfile} className={`${btnBase} bg-black text-white hover:bg-lime-500 hover:text-black`}>
+                  <Save size={14} /> {dirtyProfile ? 'Save changes' : 'Saved'}
+                </button>
+              </div>
             </div>
           </div>
         )}
