@@ -109,7 +109,7 @@ const Footer = memo(function Footer() {
                 <button
                   key={item.label}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-left font-mono text-xs md:text-sm font-bold uppercase text-white/60 hover:text-lime-400 transition-colors flex items-center gap-3 group py-1"
+                  className="text-left font-mono text-xs md:text-sm font-bold uppercase text-white/60 hover:text-lime-400 transition-colors flex items-center gap-3 group py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
                 >
                   <span className="w-1.5 h-1.5 bg-white/20 group-hover:bg-lime-400 transition-colors" />
                   <span className="tracking-[0.14em] md:tracking-[0.2em] relative">
@@ -134,7 +134,7 @@ const Footer = memo(function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group flex items-center justify-between border border-white/10 bg-[#111111] hover:bg-lime-400 hover:border-lime-400 transition-colors duration-300 p-3"
+                  className="group flex items-center justify-between border border-white/10 bg-[#111111] hover:bg-lime-400 hover:border-lime-400 transition-colors duration-300 p-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
                 >
                   <div className="flex items-center gap-3">
                     <link.icon size={16} className="text-white/40 group-hover:text-black transition-colors" />
@@ -149,7 +149,7 @@ const Footer = memo(function Footer() {
                 href="https://discord.com/users/brianaryansyah"
                 target="_blank"
                 rel="noreferrer"
-                className="group flex items-center justify-between border border-white/10 bg-[#111111] hover:bg-lime-400 hover:border-lime-400 transition-colors duration-300 p-3 mt-1"
+                className="group flex items-center justify-between border border-white/10 bg-[#111111] hover:bg-lime-400 hover:border-lime-400 transition-colors duration-300 p-3 mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
                 title="Open Discord profile"
               >
                 <div className="flex items-center gap-3">
@@ -187,7 +187,7 @@ const Footer = memo(function Footer() {
             &copy; {new Date().getFullYear()} BRIAN ARYANSYAH PAMUNGKAS. ALL RIGHTS RESERVED.
             <Link
               to="/admin"
-              className="flex items-center gap-1.5 text-white/30 hover:text-lime-400 transition-colors border border-white/10 rounded-full px-2.5 py-1 hover:border-lime-400/40"
+              className="flex items-center gap-1.5 text-white/30 hover:text-lime-400 transition-colors border border-white/10 rounded-full px-2.5 py-1 hover:border-lime-400/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
               aria-label="Open site admin"
             >
               <Shield size={11} /> ADMIN
