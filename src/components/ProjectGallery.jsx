@@ -320,14 +320,13 @@ export default function ProjectGallery({ onOpenProject }) {
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-6 scrollbar-hide [-webkit-overflow-scrolling:touch] [touch-action:pan-x] pb-4"
         >
           {projects.map((project, index) => (
-            <Gsap.div
+            <Gsap.button
+              type="button"
               key={project.id}
               id={`project-${project.id}`}
               onClick={() => onOpenProject?.(project)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter") onOpenProject?.(project); }}
-              className="project-card group relative w-[80vw] shrink-0 snap-center overflow-hidden rounded-lg border border-white/10 bg-neutral-950 cursor-pointer active:scale-[0.98] transition-transform"
+              aria-label={`View project ${project.title}`}
+              className="project-card group relative w-[80vw] shrink-0 snap-center overflow-hidden rounded-lg border border-white/10 bg-neutral-950 text-left cursor-pointer active:scale-[0.98] transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
               data-project-index={index}
               style={{ WebkitTapHighlightColor: 'transparent', aspectRatio: '3/4' }}
             >
@@ -381,7 +380,7 @@ export default function ProjectGallery({ onOpenProject }) {
                   <ArrowUpRight size={14} strokeWidth={2.5} />
                 </div>
               </div>
-            </Gsap.div>
+            </Gsap.button>
           ))}
           <div className="shrink-0 w-2" />
         </div>
@@ -432,16 +431,13 @@ export default function ProjectGallery({ onOpenProject }) {
 
           {/* Project Cards */}
           {projects.map((project, index) => (
-            <Gsap.div
+            <Gsap.button
+              type="button"
               key={project.id}
               id={`project-${project.id}`}
               onClick={() => onOpenProject?.(project)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") onOpenProject?.(project);
-              }}
-              className="project-card group relative h-[70vh] w-[45vw] shrink-0 overflow-hidden rounded-[4px] border border-white/10 bg-neutral-900 transition-all duration-500 hover:border-lime-400/50 hover:shadow-[0_0_40px_rgba(163,230,53,0.1)] active:scale-[0.98] cursor-pointer"
+              aria-label={`View project ${project.title}`}
+              className="project-card group relative h-[70vh] w-[45vw] shrink-0 overflow-hidden rounded-[4px] border border-white/10 bg-neutral-900 text-left transition-all duration-500 hover:border-lime-400/50 hover:shadow-[0_0_40px_rgba(163,230,53,0.1)] active:scale-[0.98] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime-400"
               data-project-index={index}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
@@ -511,7 +507,7 @@ export default function ProjectGallery({ onOpenProject }) {
                   </span>
                 </div>
               </Gsap.div>
-            </Gsap.div>
+            </Gsap.button>
           ))}
 
           <div className="shrink-0 w-[10vw]"></div>
