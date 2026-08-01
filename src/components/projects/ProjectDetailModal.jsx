@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Gsap, GsapPresence } from "../../utils/gsapAnimate";
 import ProjectDetailRouter from "./ProjectDetailRouter";
 
 export default function ProjectDetailModal() {
   const navigate = useNavigate();
+  const panelRef = useRef(null);
 
   const handleClose = () => {
     navigate(-1);
@@ -13,22 +14,47 @@ export default function ProjectDetailModal() {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previouslyFocused = document.activeElement;
 
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
 
-    const onEscape = (event) => {
+    // Move focus into the dialog so keyboard users start inside it.
+    const panel = panelRef.current;
+    if (panel) panel.focus();
+
+    const onKeyDown = (event) => {
       if (event.key === "Escape") {
         navigate(-1);
+        return;
+      }
+
+      // Trap Tab / Shift+Tab within the dialog.
+      if (event.key !== "Tab") return;
+      const focusables = panel?.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
-    window.addEventListener("keydown", onEscape);
+    window.addEventListener("keydown", onKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
-      window.removeEventListener("keydown", onEscape);
+      window.removeEventListener("keydown", onKeyDown);
+      if (previouslyFocused && typeof previouslyFocused.focus === "function") {
+        previouslyFocused.focus();
+      }
     };
   }, [navigate]);
 
@@ -44,12 +70,17 @@ export default function ProjectDetailModal() {
           onClick={handleClose}
         />
         <Gsap.div
+          ref={panelRef}
           initial={{ opacity: 0, y: 30, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.98 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           data-lenis-prevent
-          className="relative z-10 w-full h-full md:h-auto md:max-h-[90vh] max-w-6xl bg-[#FAF9F6] shadow-2xl md:rounded-lg overflow-y-auto overscroll-contain flex flex-col"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Project detail"
+          tabIndex={-1}
+          className="relative z-10 w-full h-full md:h-auto md:max-h-[90vh] max-w-6xl bg-[#FAF9F6] shadow-2xl md:rounded-lg overflow-y-auto overscroll-contain flex flex-col outline-none"
           onClick={(e) => e.stopPropagation()}
         >
           <ProjectDetailRouter mode="modal" />

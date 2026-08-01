@@ -148,6 +148,9 @@ function ImageCarousel() {
 
 /* ─── Main Modal ────────────────────────────────────────── */
 export default function HackathonDetailModal({ isOpen, onClose }) {
+    const panelRef = useRef(null);
+    const closeButtonRef = useRef(null);
+
     // Lock body scroll
     useEffect(() => {
         if (!isOpen) return;
@@ -156,12 +159,41 @@ export default function HackathonDetailModal({ isOpen, onClose }) {
         return () => { document.body.style.overflow = prev; };
     }, [isOpen]);
 
-    // Escape key
+    // Escape key + focus management
     useEffect(() => {
         if (!isOpen) return;
-        const handler = (e) => { if (e.key === 'Escape') onClose(); };
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+
+        const previouslyFocused = document.activeElement;
+        if (closeButtonRef.current) closeButtonRef.current.focus();
+
+        const onKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                onClose();
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            const focusables = panelRef.current?.querySelectorAll(
+                'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            );
+            if (!focusables || focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        };
+
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+                previouslyFocused.focus();
+            }
+        };
     }, [isOpen, onClose]);
 
     return createPortal(
@@ -180,12 +212,17 @@ export default function HackathonDetailModal({ isOpen, onClose }) {
 
                     {/* Modal content */}
                     <Gsap.div
+                        ref={panelRef}
                         initial={{ opacity: 0, y: 30, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.98 }}
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                         data-lenis-prevent
-                        className="relative z-10 w-full h-full md:h-auto md:max-h-[90vh] max-w-6xl bg-[#FAF9F6] shadow-2xl md:rounded-lg overflow-y-auto overscroll-contain flex flex-col"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="hackathon-modal-title"
+                        tabIndex={-1}
+                        className="relative z-10 w-full h-full md:h-auto md:max-h-[90vh] max-w-6xl bg-[#FAF9F6] shadow-2xl md:rounded-lg overflow-y-auto overscroll-contain flex flex-col outline-none"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* ── Sticky header ─────────────────────── */}
@@ -198,8 +235,9 @@ export default function HackathonDetailModal({ isOpen, onClose }) {
                                     </span>
                                 </div>
                                 <button
+                                    ref={closeButtonRef}
                                     onClick={onClose}
-                                    className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300"
+                                    className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                                     aria-label="Close"
                                 >
                                     <X size={18} />
@@ -216,7 +254,7 @@ export default function HackathonDetailModal({ isOpen, onClose }) {
                                     Base Indonesia Hackathon 2025
                                 </p>
 
-                                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tighter text-black mb-6">
+                                <h1 id="hackathon-modal-title" className="text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tighter text-black mb-6">
                                     BASE <span className="text-transparent" style={{ WebkitTextStroke: '2px black' }}>REALMS</span>
                                 </h1>
 
