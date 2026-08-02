@@ -19,6 +19,12 @@
 /README-draft.md
 /skills-lock.json
 /.agents/
+
+# community & repo metadata kept off GitHub for now
+/CODE_OF_CONDUCT.md
+/CONTRIBUTING.md
+/LICENSE
+/SECURITY.md
 .env.local
 .env.development.local
 .env.test.local
