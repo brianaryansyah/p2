@@ -96,6 +96,7 @@ const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRev
           style={{ perspective: '600px', willChange: 'transform' }}
           onMouseEnter={(e) => {
             const el = e.currentTarget;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             el.style.animation = `letter-bounce 0.4s ease-in-out`;
             setTimeout(() => { el.style.animation = ''; }, 400);
           }}
