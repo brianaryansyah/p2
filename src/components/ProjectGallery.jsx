@@ -26,6 +26,67 @@ function cloudinarySrc(originalUrl, width) {
   }
 }
 
+const GALLERY_COLORS = ['from-lime-500/30', 'from-cyan-400/25', 'from-fuchsia-500/25', 'from-amber-500/25', 'from-sky-500/25'];
+const GALLERY_GRIDS = [
+  'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+];
+
+function initials(name) {
+  const words = String(name || '').trim().split(/\s+/).filter(Boolean);
+  return (words[0]?.[0] || '') + (words[1]?.[0] || '');
+}
+
+/** Project visual — real image when provided, branded placeholder otherwise. */
+function ProjectVisual({ project, index, ratio }) {
+  const hasImage = !!(project.img && typeof project.img === 'string');
+  const widths = ratio === 'mobile' ? [400, 800] : [400, 800, 1200];
+  const primary = ratio === 'mobile' ? 800 : 800;
+
+  if (hasImage) {
+    const srcset = widths.map((w) => `${cloudinarySrc(project.img, w)} ${w}w`).join(', ');
+    return (
+      <picture>
+        <source srcSet={srcset} sizes={ratio === 'mobile' ? '80vw' : '45vw'} />
+        <img
+          draggable="false"
+          src={cloudinarySrc(project.img, primary)}
+          srcSet={srcset}
+          sizes={ratio === 'mobile' ? '80vw' : '45vw'}
+          alt={project.title}
+          width={primary}
+          height={ratio === 'mobile' ? Math.round(primary * (4 / 3)) : Math.round(primary / 1.333)}
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 grayscale-[50%] group-hover:grayscale-0 will-change-transform"
+          style={{ imageRendering: "auto" }}
+        />
+      </picture>
+    );
+  }
+
+  const color = GALLERY_COLORS[index % GALLERY_COLORS.length];
+  return (
+    <div
+      aria-hidden="true"
+      className={`absolute inset-0 overflow-hidden bg-[radial-gradient(140%_120%_at_20%_0%,rgba(163,230,53,0.16),transparent_55%),radial-gradient(120%_140%_at_90%_90%,rgba(163,230,53,0.08),transparent_55%)]`}
+    >
+      <div
+        className="absolute inset-0 opacity-60"
+        style={{ backgroundImage: GALLERY_GRIDS[index % GALLERY_GRIDS.length], backgroundSize: '44px 44px' }}
+      />
+      <span
+        className={`absolute inset-0 bg-gradient-to-br ${color} via-transparent to-transparent opacity-30`}
+      />
+      <span className="absolute font-display font-black uppercase text-white/[0.06] select-none leading-none"
+        style={{ fontSize: 'min(38vh, 34rem)', right: '-6%', bottom: '-14%', lineHeight: 0.9 }}
+      >
+        {initials(project.title)}
+      </span>
+    </div>
+  );
+}
+
 export default function ProjectGallery({ onOpenProject }) {
   const sectionRef = useRef(null);
   const trackRef = useRef(null);
@@ -348,27 +409,7 @@ export default function ProjectGallery({ onOpenProject }) {
                 >
                   {/* Image */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <picture>
-                      <source
-                        srcSet={[
-                          cloudinarySrc(project.img, 400) + ' 400w',
-                          cloudinarySrc(project.img, 800) + ' 800w',
-                        ].join(', ')}
-                        sizes="80vw"
-                      />
-                      <img
-                        draggable="false"
-                        src={cloudinarySrc(project.img, 800)}
-                        alt={project.title}
-                        width="800"
-                        height="1067"
-                        loading={index === 0 ? "eager" : "lazy"}
-                        fetchPriority={index === 0 ? "high" : "auto"}
-                        decoding="async"
-                        className="h-full w-full object-cover opacity-70 grayscale-[30%]"
-                        style={{ imageRendering: "auto" }}
-                      />
-                    </picture>
+                    <ProjectVisual project={project} index={index} ratio="mobile" />
                   </div>
 
                   {/* Gradient overlay */}
@@ -484,35 +525,8 @@ export default function ProjectGallery({ onOpenProject }) {
               data-project-index={index}
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <div className="absolute inset-0 overflow-hidden bg-neutral-950">
-                <picture>
-                  <source
-                    srcSet={[
-                      cloudinarySrc(project.img, 400) + ' 400w',
-                      cloudinarySrc(project.img, 800) + ' 800w',
-                      cloudinarySrc(project.img, 1200) + ' 1200w',
-                    ].join(', ')}
-                    sizes="45vw"
-                  />
-                  <img
-                    draggable="false"
-                    src={cloudinarySrc(project.img, 800)}
-                    srcSet={[
-                      cloudinarySrc(project.img, 400) + ' 400w',
-                      cloudinarySrc(project.img, 800) + ' 800w',
-                      cloudinarySrc(project.img, 1200) + ' 1200w',
-                    ].join(', ')}
-                    sizes="45vw"
-                    alt={project.title}
-                    width="1200"
-                    height="900"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    decoding="async"
-                    className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 grayscale-[50%] group-hover:grayscale-0 will-change-transform"
-                    style={{ imageRendering: "auto" }}
-                  />
-                </picture>
+<div className="absolute inset-0 overflow-hidden bg-neutral-950">
+                <ProjectVisual project={project} index={index} ratio="desktop" />
               </div>
 
               {/* Premium dark gradient overlay */}
