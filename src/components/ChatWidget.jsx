@@ -507,7 +507,7 @@ const ChatWidget = ({ isOpen: controlledIsOpen, onOpenChange }) => {
                     >
                         {/* Initial login line */}
                         <div className="mb-2 text-neutral-500">
-                            Last login: {new Date().toDateString()} on ttys001
+                            Last login: {new Date().toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} on ttys001
                         </div>
 
                         {messages.map((msg, idx) => (
