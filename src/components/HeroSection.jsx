@@ -73,12 +73,12 @@ const WordReveal = ({ text, baseDelay = 0, stagger = 0.12, className = '', isRev
 };
 
 // === TEXT REVEAL WITH LETTER SPLIT ===
-const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRevealed = true }) => {
+const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRevealed = true, nowrap = false }) => {
   const letters = text.split('');
   const floatAnimations = ['hero-float', 'hero-float-alt', 'hero-float-wide'];
 
   return (
-    <span className={`inline-flex flex-wrap justify-center ${className}`}>
+    <span className={`inline-flex justify-center ${nowrap ? 'flex-nowrap whitespace-nowrap' : 'flex-wrap'} ${className}`}>
       {letters.map((letter, i) => (
         <Gsap.span
           key={i}
@@ -363,13 +363,13 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           <OrbitingDecoration icon={Terminal} delay={0.45} className="left-6 sm:left-12 lg:left-28 bottom-8 hidden sm:flex" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
 
           <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
-            <h1 className="text-[clamp(2.25rem,7vw,7rem)] font-black uppercase tracking-tight text-black leading-[0.9]">
+            <h1 className="text-[clamp(1.75rem,6vw,6rem)] font-black uppercase tracking-tight text-black leading-[0.9]">
               <span className="block">
                 <TextReveal text={heroNameLine1} baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
               </span>
               {heroNameLine2 && (
-                <span className="block whitespace-nowrap mt-2 sm:mt-0 text-transparent font-outline-fallback">
-                  <TextReveal text={heroNameLine2} baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} />
+                <span className="block mt-2 sm:mt-0 text-transparent font-outline-fallback">
+                  <TextReveal text={heroNameLine2} baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} nowrap />
                 </span>
               )}
             </h1>
