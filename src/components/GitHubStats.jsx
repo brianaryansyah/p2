@@ -4,6 +4,7 @@ import { Calendar, Code, ExternalLink, Users, Terminal } from 'lucide-react';
 
 const GITHUB_USERNAME = 'brianaryansyah';
 const GITHUB_PROFILE_URL = `https://github.com/${GITHUB_USERNAME}`;
+const joinedYearFormatter = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', year: 'numeric' });
 const HEATMAP_DAYS = 364;
 const COLS = 52;
 const ROWS = 7;
@@ -279,7 +280,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '-' : error ? '----' : (userData?.created_at ? new Date(userData.created_at).getFullYear() : '----')}
+                                    {loading || error ? '----' : (userData?.created_at ? joinedYearFormatter.format(new Date(userData.created_at)) : '----')}
                                 </p>
                             </div>
                         </div>
