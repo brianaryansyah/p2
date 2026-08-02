@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Gsap, GsapPresence } from '../utils/gsapAnimate';
-// Note: scroll-triggered entrance animations removed from this section intentionally
 import { Plus, Calendar, Building2, Sparkles, ArrowUpRight } from 'lucide-react';
 import { usePortfolioData } from '../hooks/usePortfolioData';
 
@@ -131,16 +130,28 @@ const ProfessionalExperience = () => {
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-        <div className="flex items-center gap-3 mb-14 md:mb-16">
+        <Gsap.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center gap-3 mb-14 md:mb-16"
+        >
           <span className="w-[6px] h-[6px] rounded-full bg-lime-500 shrink-0" />
           <span className="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.24em] text-black/32">
             03 - Experience
           </span>
           <div className="flex-1 h-px bg-black/[0.07]" />
-        </div>
+        </Gsap.div>
 
         <div className="grid lg:grid-cols-[360px_1fr] gap-10 lg:gap-14 items-start min-w-0">
-          <aside className="lg:sticky lg:top-24 min-w-0">
+          <Gsap.aside
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:sticky lg:top-24 min-w-0"
+          >
             <h2 className="text-[34px] sm:text-[46px] lg:text-[56px] font-black uppercase tracking-[-0.03em] leading-[0.95] text-black">
               Professional
               <br />
@@ -164,9 +175,15 @@ const ProfessionalExperience = () => {
               <Sparkles className="w-3.5 h-3.5" />
               <p className="font-mono text-[9px] uppercase tracking-[0.16em]">Career timeline - expand each role</p>
             </div>
-          </aside>
+          </Gsap.aside>
 
-          <div className="relative space-y-3 min-w-0 overflow-x-clip">
+          <Gsap.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="relative space-y-3 min-w-0 overflow-x-clip"
+          >
             {experiences.length === 0 ? (
               <div className="border border-dashed border-black/15 bg-white/60 rounded-[6px] px-6 py-12 flex flex-col items-center justify-center text-center">
                 <span className="w-8 h-8 rounded-full bg-lime-400/15 flex items-center justify-center mb-4">
@@ -197,7 +214,7 @@ const ProfessionalExperience = () => {
                 <ArrowUpRight className="w-3 h-3" />
               </span>
             </div>
-          </div>
+          </Gsap.div>
         </div>
       </div>
     </section>
