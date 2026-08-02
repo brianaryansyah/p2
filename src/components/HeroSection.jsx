@@ -164,7 +164,7 @@ const OrbitingDecoration = ({ icon: Icon, delay, className, isRevealed, enableAm
         y: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
         scale: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
       }}
-      className={`absolute flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-lime-500/20 bg-white/60 backdrop-blur-lg shadow-[0_10px_30px_rgba(132,204,22,0.12)] ${className}`}
+      className={`absolute flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-lime-500/20 bg-white/60 backdrop-blur-lg shadow-[0_10px_30px_rgba(132,204,22,0.12)] pointer-events-none z-0 ${className}`}
       style={enableAmbientMotion && isRevealed ? {
         animation: `${floatAnim} ${floatDur}s ${delay + 0.35}s ease-in-out infinite`,
         willChange: 'transform',
@@ -362,13 +362,13 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           <OrbitingDecoration icon={Code2} delay={0.15} className="left-0 sm:left-2 lg:left-16 top-2" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
           <OrbitingDecoration icon={Terminal} delay={0.45} className="left-6 sm:left-12 lg:left-28 bottom-8 hidden sm:flex" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
 
-          <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
-            <h1 className="text-[clamp(1.75rem,6vw,6rem)] font-black uppercase tracking-tight text-black leading-[0.9]">
-              <span className="block">
+          <ParallaxTilt className="w-full flex flex-col items-center relative z-10" intensity={0.03}>
+            <h1 className="text-[clamp(1.6rem,4.8vw,5rem)] font-black uppercase tracking-tight text-black leading-[0.92] max-w-full">
+              <span className="block w-full flex justify-center">
                 <TextReveal text={heroNameLine1} baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
               </span>
               {heroNameLine2 && (
-                <span className="block mt-2 sm:mt-0 text-transparent font-outline-fallback">
+                <span className="block mt-1.5 sm:mt-2 text-transparent font-outline-fallback w-full flex justify-center px-2">
                   <TextReveal text={heroNameLine2} baseDelay={0.35} stagger={0.04} isRevealed={isRevealed} nowrap />
                 </span>
               )}
