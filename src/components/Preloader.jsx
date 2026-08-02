@@ -119,7 +119,7 @@ const Preloader = ({ onComplete }) => {
                         if (progress === 100) {
                             ascii += `  [OK]\n>> BOOT SEQUENCE COMPLETE.`;
                         } else {
-                            ascii += `  [${fillChars[tick % 4]}]\n>> 0x${Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase()} ...`;
+                            ascii += `  [${fillChars[tick % 4]}]\n>> 0x${Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0').toUpperCase()} …`;
                         }
                         return ascii;
                     })()}

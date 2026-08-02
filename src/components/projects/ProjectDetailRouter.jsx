@@ -4,7 +4,7 @@ import { getProjectRouteConfig } from "../../projectDetails/projectRegistry";
 
 const LoadingState = () => (
   <div className="p-8 text-center text-sm font-bold uppercase tracking-[0.2em]">
-    Loading project...
+    Loading project…
   </div>
 );
 

@@ -251,7 +251,7 @@ const GitHubStats = memo(function GitHubStats() {
                             </div>
                             <div>
                                 <p className="text-4xl lg:text-6xl text-white font-black tracking-tighter group-hover:text-lime-400 transition-colors">
-                                    {loading ? '...' : error ? '--' : (totalContributions > 999 ? `${(totalContributions / 1000).toFixed(1)}k` : totalContributions)}
+                                    {loading ? '…' : error ? '--' : (totalContributions > 999 ? `${(totalContributions / 1000).toFixed(1)}k` : totalContributions)}
                                 </p>
                             </div>
                         </div>
