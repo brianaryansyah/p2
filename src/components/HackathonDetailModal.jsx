@@ -108,14 +108,14 @@ function ImageCarousel() {
                 {/* Nav arrows - Minimal styling */}
                 <button
                     onClick={(e) => { e.stopPropagation(); go(-1); }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:bg-white text-black/60 hover:text-black transition-all"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:bg-white text-black/60 hover:text-black transition-colors"
                     aria-label="Previous image"
                 >
                     <ChevronLeft size={20} strokeWidth={2} />
                 </button>
                 <button
                     onClick={(e) => { e.stopPropagation(); go(1); }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:bg-white text-black/60 hover:text-black transition-all"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/50 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:bg-white text-black/60 hover:text-black transition-colors"
                     aria-label="Next image"
                 >
                     <ChevronRight size={20} strokeWidth={2} />

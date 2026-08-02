@@ -30,7 +30,7 @@ const ChatLauncher = memo(function ChatLauncher() {
             <Suspense fallback={(
                 <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] flex flex-col items-end pointer-events-auto font-mono text-sm">
                     <button
-                        className="group flex items-center justify-center w-11 h-11 md:w-14 md:h-14 bg-black border border-neutral-800 text-lime-400 shadow-lg hover:bg-neutral-900 transition-all rounded-full"
+                        className="group flex items-center justify-center w-11 h-11 md:w-14 md:h-14 bg-black border border-neutral-800 text-lime-400 shadow-lg hover:bg-neutral-900 transition-colors rounded-full"
                         aria-label="Loading terminal"
                     >
                         <Terminal size={20} className="animate-pulse" />
@@ -46,7 +46,7 @@ const ChatLauncher = memo(function ChatLauncher() {
         <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] flex flex-col items-end pointer-events-auto font-mono text-sm">
             <button
                 onClick={openChat}
-                className="group flex items-center justify-center w-11 h-11 md:w-14 md:h-14 bg-black border border-neutral-800 text-lime-400 shadow-lg hover:bg-neutral-900 transition-all rounded-full"
+                className="group flex items-center justify-center w-11 h-11 md:w-14 md:h-14 bg-black border border-neutral-800 text-lime-400 shadow-lg hover:bg-neutral-900 transition-colors rounded-full"
                 aria-label="Open terminal (Ctrl+K)"
             >
                 <Terminal size={20} className="group-hover:scale-110 transition-transform" />

@@ -115,7 +115,7 @@ const Footer = memo(function Footer() {
                   <span className="w-1.5 h-1.5 bg-white/20 group-hover:bg-lime-400 transition-colors" />
                   <span className="tracking-[0.14em] md:tracking-[0.2em] relative">
                     {item.label}
-                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-lime-400 group-hover:w-full transition-all duration-300" />
+                    <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-lime-400 group-hover:w-full transition-[width] duration-300" />
                   </span>
                 </button>
               ))}

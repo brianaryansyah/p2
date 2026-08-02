@@ -43,7 +43,7 @@ export default function ProjectCaseLayout({
           </div>
           <button
             onClick={onClose}
-            className="flex items-center gap-2 rounded-full border border-black/10 bg-white px-5 py-2 text-xs md:text-sm font-bold tracking-wide uppercase hover:bg-black hover:text-white transition-all duration-300 shadow-sm hover:shadow-md"
+            className="flex items-center gap-2 rounded-full border border-black/10 bg-white px-5 py-2 text-xs md:text-sm font-bold tracking-wide uppercase hover:bg-black hover:text-white transition-[background-color,color,box-shadow] duration-300"
           >
             <ArrowUpRight className="rotate-[225deg]" size={16} />
             {closeLabel}
@@ -88,13 +88,13 @@ export default function ProjectCaseLayout({
           >
             {project.links?.live && (
               <a href={project.links.live} target="_blank" rel="noreferrer"
-                className="bg-lime-400 text-black px-8 py-3.5 font-bold uppercase text-xs tracking-wider hover:bg-black hover:text-white transition-all duration-300 rounded-[2px] flex items-center gap-2 shadow-sm">
+                className="bg-lime-400 text-black px-8 py-3.5 font-bold uppercase text-xs tracking-wider hover:bg-black hover:text-white transition-[background-color,color] duration-300 rounded-[2px] flex items-center gap-2 shadow-sm">
                 <Globe size={16} /> View Live
               </a>
             )}
             {project.links?.repo && (
               <a href={project.links.repo} target="_blank" rel="noreferrer"
-                className="bg-black/5 text-black px-8 py-3.5 font-bold uppercase text-xs tracking-wider border border-transparent hover:border-black/20 transition-all duration-300 rounded-[2px] flex items-center gap-2">
+                className="bg-black/5 text-black px-8 py-3.5 font-bold uppercase text-xs tracking-wider border border-transparent hover:border-black/20 transition-[background-color,border-color,color] duration-300 rounded-[2px] flex items-center gap-2">
                 <Github size={16} /> Repository
               </a>
             )}

@@ -22,7 +22,7 @@ const ExperienceItem = ({ experience, isExpanded, onToggle, index }) => {
         <button
           onClick={onToggle}
           type="button"
-          className="w-full max-w-full rounded-[6px] border border-black/[0.08] bg-white text-left px-5 md:px-7 py-6 md:py-7 hover:border-black/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300"
+          className="w-full max-w-full rounded-[6px] border border-black/[0.08] bg-white text-left px-5 md:px-7 py-6 md:py-7 hover:border-black/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-[border-color,box-shadow] duration-300"
         >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
