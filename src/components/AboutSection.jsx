@@ -2,6 +2,7 @@ import { memo, useState, lazy, Suspense } from 'react';
 import { Gsap } from '../utils/gsapAnimate';
 import { Trophy, ArrowUpRight, MapPin } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import ProfileImage from './ProfileImage';
 
 const HackathonDetailModal = lazy(() => import('./HackathonDetailModal'));
@@ -9,18 +10,6 @@ const HackathonDetailModal = lazy(() => import('./HackathonDetailModal'));
 /* ─────────────────────────────────────────
    Static data
    ───────────────────────────────────────── */
-const achievements = [
-  {
-    icon: Trophy,
-    rank: 'National',
-    category: 'Hackathon',
-    title: 'National Finalist',
-    event: 'Base Indonesia Hackathon 2025',
-    year: '2025',
-    description: 'Competed against top engineering teams nationwide, building a decentralized solution on the Base blockchain.',
-  },
-];
-
 const STATS = [
   { value: 'WEB', label: 'Product\nFocus' },
   { value: 'CODE', label: 'Clean\nArchitecture' },
@@ -38,12 +27,15 @@ const CAPABILITIES = [
    Achievement Card
    ───────────────────────────────────────── */
 const AchievementCard = ({ achievement, index, onClick }) => {
-  const Icon = achievement.icon;
+  const title = achievement.title || 'Achievement';
+  const track = achievement.track || 'Achievement';
+  const project = achievement.project || '';
+
   return (
     <Gsap.button
       type="button"
       onClick={onClick}
-      aria-label={`Open details for ${achievement.title}`}
+      aria-label={`Open details for ${title}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -59,19 +51,11 @@ const AchievementCard = ({ achievement, index, onClick }) => {
         {/* Top meta row */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            {/* Category tag */}
+            {/* Track tag */}
             <span className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-black/45 border border-black/[0.1] px-2.5 py-1 rounded-[2px] bg-white/90 shadow-[0_1px_4px_rgba(0,0,0,0.03)]">
-              {achievement.category}
+              {track}
             </span>
-            {/* Rank badge */}
-            {achievement.rank && (
-              <span className="font-mono text-[8.5px] font-bold uppercase tracking-[0.18em] bg-black text-white px-2.5 py-1 rounded-[2px]">
-                {achievement.rank}
-              </span>
-            )}
           </div>
-          {/* Year */}
-          <span className="font-mono text-[11px] font-bold text-black/30 tabular-nums">{achievement.year}</span>
         </div>
 
         {/* Main content */}
@@ -83,14 +67,16 @@ const AchievementCard = ({ achievement, index, onClick }) => {
                 {String(index + 1).padStart(2, '0')}
               </span>
               <h3 className="font-display font-bold text-[24px] md:text-[29px] tracking-[-0.022em] text-black leading-[0.98]">
-                {achievement.title}
+                {title}
               </h3>
             </div>
 
-            {/* Event name */}
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-black/40 ml-8 mb-4">
-              {achievement.event}
-            </p>
+            {/* Project name */}
+            {project && (
+              <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-black/40 ml-8 mb-4">
+                {project}
+              </p>
+            )}
 
             {/* Description */}
             {achievement.description && (
@@ -102,7 +88,7 @@ const AchievementCard = ({ achievement, index, onClick }) => {
 
           {/* Icon circle */}
           <div className="shrink-0 w-11 h-11 rounded-full border border-black/[0.1] bg-white/95 shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex items-center justify-center group-hover:border-black/20 transition-all duration-300">
-            <Icon size={16} className="text-black/35 group-hover:text-black/55 transition-colors duration-300" />
+            <Trophy size={16} className="text-lime-500/60 group-hover:text-lime-500 transition-colors duration-300" />
           </div>
         </div>
 
@@ -126,8 +112,12 @@ const AchievementCard = ({ achievement, index, onClick }) => {
    ───────────────────────────────────────── */
 const AboutSection = memo(function AboutSection() {
   const [showHackathonDetail, setShowHackathonDetail] = useState(false);
+  const [activeAchievement, setActiveAchievement] = useState(null);
+  const [data] = usePortfolioData();
   const { settings } = useSiteSettings();
   const profile = settings.profile;
+
+  const achievements = data.achievements || [];
 
   const location = profile.location || 'Indonesia';
   const profileName = profile.name || 'Brian Aryansyah Pamungkas';
@@ -350,7 +340,10 @@ const AboutSection = memo(function AboutSection() {
                       key={index}
                       achievement={achievement}
                       index={index}
-                      onClick={() => setShowHackathonDetail(true)}
+                      onClick={() => {
+                        setActiveAchievement(achievement);
+                        setShowHackathonDetail(true);
+                      }}
                     />
                   ))}
                 </div>
@@ -366,6 +359,7 @@ const AboutSection = memo(function AboutSection() {
         <HackathonDetailModal
           isOpen={showHackathonDetail}
           onClose={() => setShowHackathonDetail(false)}
+          achievement={activeAchievement}
         />
       </Suspense>
 
