@@ -100,6 +100,7 @@ const TextReveal = ({ text, baseDelay = 0, stagger = 0.04, className = '', isRev
             el.style.animation = `letter-bounce 0.4s ease-in-out`;
             setTimeout(() => { el.style.animation = ''; }, 400);
           }}
+          onMouseLeave={(e) => { e.currentTarget.style.animation = ''; }}
         >
           {letter === ' ' ? '\u00A0' : letter}
         </Gsap.span>
