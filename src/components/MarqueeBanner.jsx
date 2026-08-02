@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { Pause, Play, Zap } from 'lucide-react';
+import { Gsap } from '../utils/gsapAnimate';
 
 const skills = [
   'React & Next.js',
@@ -148,7 +149,14 @@ const MarqueeBanner = memo(function MarqueeBanner() {
   }, []);
 
   return (
-    <div className="relative z-20 sm:-rotate-[0.8deg] sm:scale-[1.02] cursor-default select-none">
+    <Gsap.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="relative z-20 cursor-default select-none"
+    >
+    <div className="sm:-rotate-[0.8deg] sm:scale-[1.02]">
       <div className="bg-black shadow-[0_0_40px_rgba(163,230,53,0.08)]">
 
         {/* Floating control chip */}
@@ -201,6 +209,7 @@ const MarqueeBanner = memo(function MarqueeBanner() {
 
       </div>
     </div>
+    </Gsap.div>
   );
 });
 
