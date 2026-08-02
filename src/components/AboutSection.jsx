@@ -148,7 +148,7 @@ const AboutSection = memo(function AboutSection() {
         >
           <span className="w-[6px] h-[6px] rounded-full bg-lime-500 shrink-0" />
           <span className="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.24em] text-black/32">
-            01 — About
+            01. About
           </span>
           <div className="flex-1 h-px bg-black/[0.07]" />
         </Gsap.div>
