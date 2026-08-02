@@ -75,6 +75,19 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
         </div>
 
         {/* ARCHITECTURAL MATRIX GRID - SOLID BLACK BORDERS */}
+        {count === 0 ? (
+          <div className="border-2 border-black bg-white rounded-[6px] px-6 py-16 flex flex-col items-center justify-center text-center">
+            <span className="w-10 h-10 md:w-16 md:h-16 rounded-full border-2 border-black flex items-center justify-center mb-5 md:mb-6">
+              <Cpu className="w-5 h-5 md:w-8 md:h-8 text-black" strokeWidth={2} />
+            </span>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-black/40 mb-2">
+              Matrix pending
+            </p>
+            <p className="text-sm md:text-[15px] font-light text-black/55 max-w-[320px] leading-6">
+              Capabilities will populate here as soon as they are added through the admin.
+            </p>
+          </div>
+        ) : (
         <Gsap.div
           ref={gridRef}
           initial={{ opacity: 0, y: 20 }}
@@ -141,6 +154,7 @@ const TechnicalCapabilities = memo(function TechnicalCapabilities() {
             );
           })()}
         </Gsap.div>
+        )}
 
       </div>
     </section>
