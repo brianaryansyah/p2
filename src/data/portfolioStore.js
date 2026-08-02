@@ -1,4 +1,5 @@
 import { PORTFOLIO_DATA } from './portfolioData';
+import { SEED } from './seedContent';
 
 // ─── Reactive Content Store ──────────────────────────────────────
 // Single source of truth for the site's editable content. Base values are
@@ -9,12 +10,12 @@ import { PORTFOLIO_DATA } from './portfolioData';
 
 export const PORTFOLIO_CONTENT_STORAGE_KEY = 'portfolio_content_v1';
 
-// Base defaults mirror the current hardcoded site content. Collection
-// sections (projects, experience, achievements) start empty so the owner can
-// populate them through the /admin panel.
+// Base defaults mirror the current hardcoded site content. Collections are
+// seeded from `seedContent.js` (recast from `portfolioData.js`) so the live
+// site stays populated; the owner overrides them through the /admin panel.
 const BASE = {
-  projects: [],
-  experience: [],
+  projects: SEED.projects,
+  experience: SEED.experience,
   techStack: [
     {
       title: 'AI & Machine Learning',
@@ -78,7 +79,7 @@ const BASE = {
     { title: 'Data Analysis', desc: 'Advanced statistical modeling, big data wrangling, and actionable visualizations.' },
     { title: 'Web Engineering', desc: 'Scalable full-stack systems with ultra-responsive, accessible interfaces.' },
   ],
-  achievements: [],
+  achievements: SEED.achievements,
   profile: PORTFOLIO_DATA.profile,
 };
 
