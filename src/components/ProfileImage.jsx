@@ -16,6 +16,8 @@ const ProfileImage = memo(function ProfileImage({ settings, className = '' }) {
         alt={name}
         loading="lazy"
         decoding="async"
+        width="800"
+        height="1000"
         className={`${className} w-full h-full object-cover object-top`}
       />
     );
