@@ -121,8 +121,21 @@ const TechStack = () => {
                     </div>
 
                     {/* Right side: Table List */}
-                    <div className="flex flex-col border-t border-white/10">
-                        {stackCategories.map((category, index) => (
+                    <div className="flex flex-col border-t border-white/10 min-w-0">
+                        {stackCategories.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center text-center py-16 md:py-24 px-6 border-b border-white/10">
+                                <span className="w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-white/15 flex items-center justify-center mb-5">
+                                    <Code2 className="w-5 h-5 md:w-7 md:h-7 text-white/40" strokeWidth={2} />
+                                </span>
+                                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2">
+                                    Arsenal pending
+                                </p>
+                                <p className="text-sm font-light text-white/55 max-w-[320px] leading-6 text-center">
+                                    Tech categories and skills will appear here once they are added through the admin.
+                                </p>
+                            </div>
+                        ) : (
+                        stackCategories.map((category, index) => (
                             <Gsap.div
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
@@ -160,7 +173,8 @@ const TechStack = () => {
                                     })}
                                 </ul>
                             </Gsap.div>
-                        ))}
+                        ))
+                        )}
                     </div>
 
                 </div>
