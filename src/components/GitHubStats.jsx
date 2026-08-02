@@ -228,6 +228,8 @@ const GitHubStats = memo(function GitHubStats() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
+                        aria-busy={loading}
+                        aria-live="polite"
                         className="xl:w-1/3 grid grid-cols-2 gap-px bg-white/10 border border-white/10"
                     >
                         {/* Box 1: Repositories */}
