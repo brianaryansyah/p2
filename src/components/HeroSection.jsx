@@ -363,7 +363,7 @@ const HeroSection = memo(function HeroSection({ isRevealed = true }) {
           <OrbitingDecoration icon={Terminal} delay={0.45} className="left-6 sm:left-12 lg:left-28 bottom-8 hidden sm:flex" isRevealed={isRevealed} enableAmbientMotion={enableAmbientMotion} />
 
           <ParallaxTilt className="w-full flex flex-col items-center" intensity={0.03}>
-            <h1 className="text-[clamp(2.5rem,7.5vw,5.5rem)] font-black uppercase tracking-tight text-black leading-[0.9]">
+            <h1 className="text-[clamp(2.25rem,7vw,7rem)] font-black uppercase tracking-tight text-black leading-[0.9]">
               <span className="block">
                 <TextReveal text={heroNameLine1} baseDelay={0.15} stagger={0.06} isRevealed={isRevealed} />
               </span>
