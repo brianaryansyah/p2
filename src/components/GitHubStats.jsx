@@ -20,6 +20,9 @@ const LEVEL_COLORS = {
 
 const LOADING_COLOR = '#1a1a1a';
 
+// Smooth easing for the progressive heatmap reveal.
+const revealEase = (t) => 1 - Math.pow(1 - t, 3);
+
 const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading, error }) {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
@@ -43,26 +46,58 @@ const HeatmapCanvas = memo(function HeatmapCanvas({ data, loading, error }) {
         canvas.style.width = `${canvasWidth}px`;
         canvas.style.height = `${canvasHeight}px`;
 
+
         const ctx = canvas.getContext('2d');
-        ctx.scale(dpr, dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-        for (let i = 0; i < HEATMAP_DAYS; i++) {
+        const cellColor = (i) => {
+            if (loading || error) return LOADING_COLOR;
+            const day = data[i];
+            return day ? (LEVEL_COLORS[day.level] || LEVEL_COLORS[0]) : LEVEL_COLORS[0];
+        };
+
+const drawCell = (i, alpha) => {
             const col = Math.floor(i / ROWS);
             const row = i % ROWS;
-
             const x = col * (cellSize + gap);
             const y = row * (cellSize + gap);
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = cellColor(i);
+            ctx.fillRect(x, y, cellSize, cellSize);
+        };
 
-            if (loading || error) {
-                ctx.fillStyle = LOADING_COLOR;
-            } else {
-                const day = data[i];
-                ctx.fillStyle = day ? (LEVEL_COLORS[day.level] || LEVEL_COLORS[0]) : LEVEL_COLORS[0];
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (reduceMotion) {
+            // Static render for accessibility preference.
+            for (let i = 0; i < HEATMAP_DAYS; i++) drawCell(i, 1);
+            return;
+        }
+
+        // Progressive column sweep: revealed cells fade/rise in and stay filled.
+        const DURATION = 1100;
+        const CELLS = HEATMAP_DAYS;
+        const start = performance.now();
+
+        const frame = (now) => {
+            const elapsed = (now - start) / DURATION;
+            const eased = revealEase(Math.min(Math.max(elapsed, 0), 1));
+            const count = Math.floor(eased * CELLS);
+
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            for (let i = 0; i <= Math.min(count, CELLS - 1); i++) {
+                const frac = count === CELLS ? 1 : eased * CELLS - i;
+                const alpha = i < count ? 1 : Math.max(Math.min(frac, 1), 0);
+                drawCell(i, alpha);
             }
 
-            ctx.fillRect(x, y, cellSize, cellSize);
-        }
+            if (elapsed < 1) {
+                requestAnimationFrame(frame);
+            }
+        };
+
+        requestAnimationFrame(frame);
     }, [data, loading, error]);
 
     useEffect(() => {
