@@ -65,6 +65,11 @@ code {
   outline-offset: 3px;
 }
 
+/* Offset in-page anchors so fixed nav never overlaps focused content */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 .font-outline-fallback {
   text-shadow:
     1px 0 0 #000,
